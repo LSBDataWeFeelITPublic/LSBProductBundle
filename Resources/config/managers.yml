@@ -1,0 +1,16 @@
+services:
+    LSB\ProductBundle\Manager\ProductManager:
+        arguments:
+            - '@lsb_utility_object_manager'
+
+    LSB\ProductBundle\Manager\AssortmentGroupManager:
+        arguments:
+            - '@lsb_utility_object_manager'
+
+    LSB\ProductBundle\Manager\ProductSetProductManager:
+        arguments:
+            - '@lsb_utility_object_manager'
+
+    LSB\ProductBundle\Manager\SupplierManager:
+        arguments:
+            - '@lsb_utility_object_manager'

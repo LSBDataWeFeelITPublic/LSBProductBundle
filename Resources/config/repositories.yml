@@ -1,0 +1,23 @@
+services:
+    LSB\ProductBundle\Repository\ProductRepository:
+        arguments:
+            - '@doctrine'
+    LSB\ProductBundle\Repository\ProductRepositoryInterface: '@LSB\ProductBundle\Repository\ProductRepository'
+
+    LSB\ProductBundle\Repository\ProductSetProductRepository:
+        arguments:
+            - '@doctrine'
+
+    LSB\ProductBundle\Repository\ProductSetProductRepositoryInterface: '@LSB\ProductBundle\Repository\ProductSetProductRepository'
+
+    LSB\ProductBundle\Repository\AssortmentGroupRepository:
+        arguments:
+            - '@doctrine'
+
+    LSB\ProductBundle\Repository\AssortmentGroupRepositoryInterface: '@LSB\ProductBundle\Repository\AssortmentGroupRepository'
+
+    LSB\ProductBundle\Repository\SupplierRepository:
+        arguments:
+            - '@doctrine'
+
+    LSB\ProductBundle\Repository\SupplierRepositoryInterface: '@LSB\ProductBundle\Repository\SupplierRepository'

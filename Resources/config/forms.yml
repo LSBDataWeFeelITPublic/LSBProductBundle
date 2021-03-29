@@ -1,0 +1,28 @@
+services:
+    LSB\ProductBundle\Form\ProductType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\ProductTranslationType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\ProductSetProductType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\AssortmentGroupType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\AssortmentGroupTranslationType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\SupplierType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\SupplierTranslationType:
+        tags:
+            - { name: form.type }
