@@ -98,9 +98,9 @@ class ProductSetProduct implements ProductSetProductInterface
     }
 
     /**
-     * @return Product
+     * @return ProductInterface|null
      */
-    public function getProductSet(): ProductInterface
+    public function getProductSet(): ?ProductInterface
     {
         return $this->productSet;
     }

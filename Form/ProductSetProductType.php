@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace LSB\ProductBundle\Form;
 
 use LSB\UtilityBundle\Form\BaseEntityType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use LSB\UtilityBundle\Form\EntityLazyType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
+use LSB\ProductBundle\Manager\ProductManager;
 
 /**
  * Class ProductSetProductType
@@ -13,6 +15,22 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class ProductSetProductType extends BaseEntityType
 {
+
+    /**
+     * @var ProductManager
+     */
+    protected ProductManager $productManager;
+
+    /**
+     * ProductSetProductType constructor.
+     * @param ProductManager $productManager
+     */
+    public function __construct(ProductManager $productManager)
+    {
+
+        $this->productManager = $productManager;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -22,6 +40,21 @@ class ProductSetProductType extends BaseEntityType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('code', TextType::class);
+            ->add(
+                'product',
+                EntityLazyType::class,
+                [
+                    'class' => $this->productManager->getFactory()->getClassName(),
+                    'required' => false
+                ]
+            )
+            ->add(
+                'productSet',
+                EntityLazyType::class,
+                [
+                    'class' => $this->productManager->getFactory()->getClassName(),
+                    'required' => false
+                ]
+            );
     }
 }

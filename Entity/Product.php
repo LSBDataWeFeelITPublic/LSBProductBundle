@@ -53,7 +53,7 @@ class Product implements ProductInterface, TranslatableInterface
      * @var float
      * @ORM\Column(type="decimal", precision=18, scale=1, nullable=false)
      */
-    protected float $itemsInPackage = 1.0;
+    protected $itemsInPackage = 1.0;
 
     /**
      * @var float|null

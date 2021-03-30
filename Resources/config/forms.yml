@@ -10,6 +10,8 @@ services:
     LSB\ProductBundle\Form\ProductSetProductType:
         tags:
             - { name: form.type }
+        arguments:
+            $productManager: '@LSB\ProductBundle\Manager\ProductManager'
 
     LSB\ProductBundle\Form\AssortmentGroupType:
         tags:

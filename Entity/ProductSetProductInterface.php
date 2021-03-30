@@ -21,9 +21,9 @@ interface ProductSetProductInterface
     public function setProduct(?ProductInterface $product): self;
 
     /**
-     * @return Product
+     * @return ProductInterface|null
      */
-    public function getProductSet(): ProductInterface;
+    public function getProductSet(): ?ProductInterface;
 
     /**
      * @param ProductInterface $productSet
