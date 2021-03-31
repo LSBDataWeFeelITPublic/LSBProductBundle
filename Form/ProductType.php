@@ -51,7 +51,6 @@ class ProductType extends BaseEntityType
             ->add(
                 'translations',
                 TranslationsType::class
-            )
-        ;
+            );
     }
 }

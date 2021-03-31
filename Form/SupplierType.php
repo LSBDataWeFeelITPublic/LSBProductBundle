@@ -11,7 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 /**
- * Class ProductType
+ * Class SupplierType
+ * @package LSB\ProductBundle\Form
  */
 class SupplierType extends BaseEntityType
 {

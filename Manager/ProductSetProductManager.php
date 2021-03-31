@@ -17,9 +17,11 @@ use LSB\UtilityBundle\Form\BaseEntityType;
 class ProductSetProductManager extends BaseManager
 {
     /**
-     * AssortmentGroupManager constructor.
+     * ProductSetProductManager constructor.
      * @param ObjectManagerInterface $objectManager
      * @param ProductSetProductFactoryInterface $factory
+     * @param ProductSetProductRepositoryInterface $repository
+     * @param BaseEntityType|null $form
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -36,5 +38,22 @@ class ProductSetProductManager extends BaseManager
     public function createNew(): ProductSetProductInterface
     {
         return parent::createNew();
+    }
+
+    /**
+     * @return ProductSetProductFactoryInterface
+     */
+    public function getFactory(): ProductSetProductFactoryInterface
+    {
+        return parent::getFactory();
+    }
+
+    /**
+     * @return ProductSetProductRepositoryInterface
+     * @throws \Exception
+     */
+    public function getRepository(): ProductSetProductRepositoryInterface
+    {
+        return parent::getRepository();
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Factory;
 
+use LSB\ProductBundle\Entity\AssortmentGroupInterface;
 use LSB\UtilityBundle\Factory\BaseFactory;
 
 /**
@@ -11,5 +12,11 @@ use LSB\UtilityBundle\Factory\BaseFactory;
  */
 class AssortmentGroupFactory extends BaseFactory implements AssortmentGroupFactoryInterface
 {
-
+    /**
+     * @return AssortmentGroupInterface
+     */
+    public function createNew(): AssortmentGroupInterface
+    {
+        return parent::createNew();
+    }
 }

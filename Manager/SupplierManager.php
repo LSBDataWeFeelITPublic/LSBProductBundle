@@ -21,6 +21,7 @@ class SupplierManager extends BaseManager
      * @param ObjectManagerInterface $objectManager
      * @param SupplierFactoryInterface $factory
      * @param SupplierRepositoryInterface $repository
+     * @param BaseEntityType|null $form
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -38,4 +39,22 @@ class SupplierManager extends BaseManager
     {
         return parent::createNew();
     }
+
+    /**
+     * @return SupplierFactoryInterface
+     */
+    public function getFactory(): SupplierFactoryInterface
+    {
+        return parent::getFactory();
+    }
+
+    /**
+     * @return SupplierRepositoryInterface
+     * @throws \Exception
+     */
+    public function getRepository(): SupplierRepositoryInterface
+    {
+        return parent::getRepository();
+    }
+
 }

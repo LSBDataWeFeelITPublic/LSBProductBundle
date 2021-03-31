@@ -9,8 +9,6 @@ use LSB\ProductBundle\Repository\AssortmentGroupRepositoryInterface;
 use LSB\UtilityBundle\Form\BaseEntityType;
 use LSB\UtilityBundle\Manager\ObjectManagerInterface;
 use LSB\UtilityBundle\Manager\BaseManager;
-use Symfony\Component\Form\AbstractType;
-
 /**
  * Class AssortmentGroupManager
  * @package LSB\ProductBundle\Manager
@@ -22,6 +20,7 @@ class AssortmentGroupManager extends BaseManager
      * @param ObjectManagerInterface $objectManager
      * @param AssortmentGroupFactoryInterface $factory
      * @param AssortmentGroupRepositoryInterface $repository
+     * @param BaseEntityType|null $form
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -38,5 +37,22 @@ class AssortmentGroupManager extends BaseManager
     public function createNew(): AssortmentGroupInterface
     {
         return parent::createNew();
+    }
+
+    /**
+     * @return AssortmentGroupFactoryInterface
+     */
+    public function getFactory(): AssortmentGroupFactoryInterface
+    {
+        return parent::getFactory();
+    }
+
+    /**
+     * @return AssortmentGroupRepositoryInterface
+     * @throws \Exception
+     */
+    public function getRepository(): AssortmentGroupRepositoryInterface
+    {
+        return parent::getRepository();
     }
 }

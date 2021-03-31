@@ -37,7 +37,7 @@ class Product implements ProductInterface, TranslatableInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false, unique=true)
      * @Assert\Length(max=50, groups={"Default"})
      */
     protected string $number;

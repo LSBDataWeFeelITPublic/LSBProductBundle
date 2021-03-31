@@ -6,6 +6,7 @@ namespace LSB\ProductBundle\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use LSB\ProductBundle\Entity\Product;
+use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\UtilityBundle\Repository\PaginationInterface;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
 
@@ -25,5 +26,17 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     public function __construct(ManagerRegistry $registry, ?string $stringClass = null)
     {
         parent::__construct($registry, $stringClass ?? Product::class);
+    }
+
+    /**
+     * @return ProductInterface|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getByNumber(): ?ProductInterface
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('lower(p.number) LIKE lower(:number)');
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

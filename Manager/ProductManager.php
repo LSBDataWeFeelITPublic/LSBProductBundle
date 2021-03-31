@@ -9,7 +9,6 @@ use LSB\ProductBundle\Repository\ProductRepositoryInterface;
 use LSB\UtilityBundle\Form\BaseEntityType;
 use LSB\UtilityBundle\Manager\ObjectManagerInterface;
 use LSB\UtilityBundle\Manager\BaseManager;
-use Symfony\Component\Form\AbstractType;
 
 /**
  * Class ProductManager
@@ -22,6 +21,7 @@ class ProductManager extends BaseManager
      * @param ObjectManagerInterface $objectManager
      * @param ProductFactoryInterface $factory
      * @param ProductRepositoryInterface $repository
+     * @param BaseEntityType|null $form
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -38,5 +38,22 @@ class ProductManager extends BaseManager
     public function createNew(): ProductInterface
     {
         return parent::createNew();
+    }
+
+    /**
+     * @return ProductFactoryInterface
+     */
+    public function getFactory(): ProductFactoryInterface
+    {
+        return parent::getFactory();
+    }
+
+    /**
+     * @return ProductRepositoryInterface
+     * @throws \Exception
+     */
+    public function getRepository(): ProductRepositoryInterface
+    {
+        return parent::getRepository();
     }
 }

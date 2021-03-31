@@ -5,7 +5,6 @@ namespace LSB\ProductBundle\Form;
 
 use LSB\UtilityBundle\Form\BaseEntityType;
 use LSB\UtilityBundle\Form\EntityLazyType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use LSB\ProductBundle\Manager\ProductManager;
 
@@ -27,7 +26,6 @@ class ProductSetProductType extends BaseEntityType
      */
     public function __construct(ProductManager $productManager)
     {
-
         $this->productManager = $productManager;
     }
 

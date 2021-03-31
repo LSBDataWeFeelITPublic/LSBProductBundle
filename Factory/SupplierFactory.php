@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Factory;
 
+use LSB\ProductBundle\Entity\SupplierInterface;
 use LSB\UtilityBundle\Factory\BaseFactory;
 
 /**
@@ -11,5 +12,11 @@ use LSB\UtilityBundle\Factory\BaseFactory;
  */
 class SupplierFactory extends BaseFactory implements SupplierFactoryInterface
 {
-
+    /**
+     * @return SupplierInterface
+     */
+    public function createNew(): SupplierInterface
+    {
+        return parent::createNew();
+    }
 }
