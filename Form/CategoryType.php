@@ -25,15 +25,11 @@ class CategoryType extends BaseEntityType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('parentNode',
-                EntityLazyType::class,
-                [
-                    'class' => $options['data_class']]
+            ->add('parent', EntityLazyType::class, ['class' => $options['data_class']])
+            ->add(
+                'translations',
+                TranslationsType::class
             )
-//            ->add(
-//                'translations',
-//                TranslationsType::class
-//            )
         ;
     }
 }

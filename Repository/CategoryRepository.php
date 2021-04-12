@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace LSB\ProductBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Knp\DoctrineBehaviors\ORM\Tree\TreeTrait;
 use LSB\ProductBundle\Entity\Category;
 use LSB\UtilityBundle\Repository\PaginationInterface;
@@ -14,19 +17,12 @@ use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
  * Class CategoryRepository
  * @package LSB\ProductBundle\Repository
  */
-class CategoryRepository extends ServiceEntityRepository implements CategoryRepositoryInterface
+class CategoryRepository extends NestedTreeRepository implements CategoryRepositoryInterface
 {
     use PaginationRepositoryTrait;
-    use TreeTrait;
 
-    /**
-     * CategoryRepository constructor.
-     * @param ManagerRegistry $registry
-     * @param string|null $stringClass
-     */
-    public function __construct(ManagerRegistry $registry, ?string $stringClass = null)
+    public function __construct(EntityManagerInterface $em, ClassMetadata $class)
     {
-        parent::__construct($registry, $stringClass ?? Category::class);
+        parent::__construct($em, $class);
     }
-
 }

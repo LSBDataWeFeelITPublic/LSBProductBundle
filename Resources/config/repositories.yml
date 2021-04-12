@@ -24,7 +24,7 @@ services:
 
     LSB\ProductBundle\Repository\CategoryRepository:
         arguments:
-            - '@doctrine'
+            - '@doctrine.orm.default_entity_manager'
     LSB\ProductBundle\Repository\CategoryRepositoryInterface: '@LSB\ProductBundle\Repository\CategoryRepository'
 
     LSB\ProductBundle\Repository\ProductCategoryRepository:
