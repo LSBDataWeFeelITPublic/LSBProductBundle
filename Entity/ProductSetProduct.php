@@ -39,7 +39,7 @@ class ProductSetProduct implements ProductSetProductInterface
     /**
      * Position
      *
-     * @var integer
+     * @var integer|null
      * @ORM\Column(type="integer", nullable=true)
      * @Gedmo\SortablePosition
      */

@@ -21,3 +21,18 @@ services:
             - '@doctrine'
 
     LSB\ProductBundle\Repository\SupplierRepositoryInterface: '@LSB\ProductBundle\Repository\SupplierRepository'
+
+    LSB\ProductBundle\Repository\CategoryRepository:
+        arguments:
+            - '@doctrine'
+    LSB\ProductBundle\Repository\CategoryRepositoryInterface: '@LSB\ProductBundle\Repository\CategoryRepository'
+
+    LSB\ProductBundle\Repository\ProductCategoryRepository:
+        arguments:
+            - '@doctrine'
+    LSB\ProductBundle\Repository\ProductCategoryRepositoryInterface: '@LSB\ProductBundle\Repository\ProductCategoryRepository'
+
+    LSB\ProductBundle\Repository\CategoryTranslationRepository:
+        arguments:
+            - '@doctrine'
+    LSB\ProductBundle\Repository\CategoryTranslationRepositoryInterface: '@LSB\ProductBundle\Repository\CategoryTranslationRepository'

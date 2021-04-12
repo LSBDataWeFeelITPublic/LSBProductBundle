@@ -7,6 +7,18 @@ services:
         tags:
             - { name: form.type }
 
+    LSB\ProductBundle\Form\CategoryType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\CategoryTranslationType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\ProductCategoryType:
+        tags:
+            - { name: form.type }
+
     LSB\ProductBundle\Form\ProductSetProductType:
         tags:
             - { name: form.type }

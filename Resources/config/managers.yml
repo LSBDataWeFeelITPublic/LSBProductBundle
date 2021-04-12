@@ -14,3 +14,11 @@ services:
     LSB\ProductBundle\Manager\SupplierManager:
         arguments:
             - '@lsb_utility_object_manager'
+
+    LSB\ProductBundle\Manager\CategoryManager:
+        arguments:
+            - '@lsb_utility_object_manager'
+
+    LSB\ProductBundle\Manager\ProductCategoryManager:
+        arguments:
+            - '@lsb_utility_object_manager'

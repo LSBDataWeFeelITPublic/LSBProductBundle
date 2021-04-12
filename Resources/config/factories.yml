@@ -34,3 +34,24 @@ services:
         alias: LSB\ProductBundle\Factory\SupplierFactory
 
     LSB\ProductBundle\Factory\SupplierFactoryInterface: '@LSB\ProductBundle\Factory\SupplierFactory'
+
+    LSB\ProductBundle\Factory\CategoryFactory:
+        arguments:
+            - '%lsb_product.config.resources.category.class.entity%'
+    lsb_product_factory_category:
+        alias: LSB\ProductBundle\Factory\CategoryFactory
+    LSB\ProductBundle\Factory\CategoryFactoryInterface: '@LSB\ProductBundle\Factory\CategoryFactory'
+
+    LSB\ProductBundle\Factory\ProductCategoryFactory:
+        arguments:
+            - '%lsb_product.config.resources.product_category.class.entity%'
+    lsb_product_factory_product_category:
+        alias: LSB\ProductBundle\Factory\ProductCategoryFactory
+    LSB\ProductBundle\Factory\ProductCategoryFactoryInterface: '@LSB\ProductBundle\Factory\ProductCategoryFactory'
+
+    LSB\ProductBundle\Factory\CategoryTranslationFactory:
+        arguments:
+            - '%lsb_product.config.resources.category_translation.class.entity%'
+    lsb_product_factory_category_translation:
+        alias: LSB\ProductBundle\Factory\CategoryTranslationFactory
+    LSB\ProductBundle\Factory\CategoryTranslationFactoryInterface: '@LSB\ProductBundle\Factory\CategoryTranslationFactory'

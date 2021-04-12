@@ -3,29 +3,41 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\DependencyInjection;
 
+use Entity\Repository\CategoryRepository;
 use LSB\ProductBundle\Entity\AssortmentGroupInterface;
 use LSB\ProductBundle\Entity\AssortmentGroupTranslationInterface;
+use LSB\ProductBundle\Entity\CategoryInterface;
+use LSB\ProductBundle\Entity\CategoryTranslationInterface;
+use LSB\ProductBundle\Entity\ProductCategoryInterface;
 use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\ProductBundle\Entity\ProductSetProductInterface;
 use LSB\ProductBundle\Entity\ProductTranslationInterface;
 use LSB\ProductBundle\Entity\SupplierInterface;
 use LSB\ProductBundle\Entity\SupplierTranslationInterface;
 use LSB\ProductBundle\Factory\AssortmentGroupFactory;
+use LSB\ProductBundle\Factory\CategoryFactory;
+use LSB\ProductBundle\Factory\ProductCategoryFactory;
 use LSB\ProductBundle\Factory\ProductFactory;
 use LSB\ProductBundle\Factory\ProductSetProductFactory;
 use LSB\ProductBundle\Factory\SupplierFactory;
 use LSB\ProductBundle\Form\AssortmentGroupTranslationType;
 use LSB\ProductBundle\Form\AssortmentGroupType;
+use LSB\ProductBundle\Form\CategoryTranslationType;
+use LSB\ProductBundle\Form\CategoryType;
+use LSB\ProductBundle\Form\ProductCategoryType;
 use LSB\ProductBundle\Form\ProductSetProductType;
 use LSB\ProductBundle\Form\ProductTranslationType;
 use LSB\ProductBundle\Form\SupplierTranslationType;
 use LSB\ProductBundle\Form\SupplierType;
 use LSB\ProductBundle\LSBProductBundle;
 use LSB\ProductBundle\Manager\AssortmentGroupManager;
+use LSB\ProductBundle\Manager\CategoryManager;
+use LSB\ProductBundle\Manager\ProductCategoryManager;
 use LSB\ProductBundle\Manager\ProductManager;
 use LSB\ProductBundle\Manager\ProductSetProductManager;
 use LSB\ProductBundle\Manager\SupplierManager;
 use LSB\ProductBundle\Repository\AssortmentGroupRepository;
+use LSB\ProductBundle\Repository\ProductCategoryRepository;
 use LSB\ProductBundle\Repository\ProductRepository;
 use LSB\ProductBundle\Repository\ProductSetProductRepository;
 use LSB\ProductBundle\Repository\SupplierRepository;
@@ -157,6 +169,51 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         // End ProductSetProduct
+                        // Start Product
+                        ->arrayNode('category')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
+                                ->children()
+                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(CategoryInterface::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(CategoryFactory::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(CategoryRepository::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(CategoryManager::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(CategoryType::class)->end()
+                                ->end()
+                                ->end()
+                            ->end()
+                            ->children()
+                                ->arrayNode(BE::CONFIG_KEY_TRANSLATION)
+                                ->children()
+                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(CategoryTranslationInterface::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(CategoryTranslationType::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        // End Product
+                        // Start ProductCategory
+                        ->arrayNode('product_category')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
+                                ->children()
+                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(ProductCategoryInterface::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(ProductCategoryFactory::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(ProductCategoryRepository::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(ProductCategoryManager::class)->end()
+                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(ProductCategoryType::class)->end()
+                                ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        // End ProductCategory
                     ->end()
                 ->end()
             ->end();
