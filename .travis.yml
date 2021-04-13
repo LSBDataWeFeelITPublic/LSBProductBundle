@@ -19,6 +19,7 @@ install:
   - composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
 script:
-  - vendor/bin/phpunit --coverage-clover=coverage.clover
-  #- wget https://scrutinizer-ci.com/ocular.phar
-  #- php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  # - composer validate --strict --no-check-lock
+  - XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover=coverage.clover
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
