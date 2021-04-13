@@ -22,7 +22,7 @@
         "lsb/utility-bundle": "dev-master",
         "knplabs/doctrine-behaviors": "^2.0",
         "stof/doctrine-extensions-bundle": "^1.6",
-        "a2lix/translation-form-bundle": "dev-master"
+        "a2lix/translation-form-bundle": "3.0.7.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
