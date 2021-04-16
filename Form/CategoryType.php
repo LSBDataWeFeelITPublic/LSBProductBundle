@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace LSB\ProductBundle\Form;
 
 use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
-use LSB\ProductBundle\Manager\CategoryManager;
 use LSB\UtilityBundle\Form\BaseEntityType;
 use LSB\UtilityBundle\Form\EntityLazyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,11 +24,16 @@ class CategoryType extends BaseEntityType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('parent', EntityLazyType::class, ['class' => $options['data_class']])
+            ->add(
+                'parent',
+                EntityLazyType::class,
+                [
+                    'class' => $options['data_class']
+                ]
+            )
             ->add(
                 'translations',
                 TranslationsType::class
-            )
-        ;
+            );
     }
 }
