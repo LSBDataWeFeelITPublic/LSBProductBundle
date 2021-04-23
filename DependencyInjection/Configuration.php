@@ -42,8 +42,7 @@ use LSB\ProductBundle\Repository\ProductRepository;
 use LSB\ProductBundle\Repository\ProductSetProductRepository;
 use LSB\ProductBundle\Repository\SupplierRepository;
 use LSB\ProductBundle\Form\ProductType;
-use LSB\UtilityBundle\DependencyInjection\BaseExtension as BE;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use LSB\UtilityBundle\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
@@ -65,161 +64,82 @@ class Configuration implements ConfigurationInterface
         $treeBuilder
             ->getRootNode()
             ->children()
-                ->scalarNode(BE::CONFIG_KEY_TRANSLATION_DOMAIN)->defaultValue((new \ReflectionClass(LSBProductBundle::class))->getShortName())->end()
-                ->arrayNode(BE::CONFIG_KEY_RESOURCES)
+                ->bundleTranslationDomainScalar(LSBProductBundle::class)->end()
+                ->resourcesNode()
                     ->children()
-                        // Start Product
-                        ->arrayNode('product')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(ProductInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(ProductFactory::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(ProductRepository::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(ProductManager::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(ProductType::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_VOTER_SUBJECT)->end()
-                                ->end()
-                                ->end()
-                            ->end()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_TRANSLATION)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(ProductTranslationInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(ProductTranslationType::class)->end()
-                                    ->end()
-                                ->end()
-                            ->end()
+                        ->translatedResourceNode(
+                            'product',
+                            ProductInterface::class,
+                            ProductFactory::class,
+                            ProductRepository::class,
+                            ProductManager::class,
+                            ProductType::class,
+                            ProductTranslationInterface::class,
+                            ProductTranslationType::class
+                        )
                         ->end()
-                        // End Product
-                        // Start AssortmentGroup
-                        ->arrayNode('assortment_group')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(AssortmentGroupInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(AssortmentGroupFactory::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(AssortmentGroupRepository::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(AssortmentGroupManager::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(AssortmentGroupType::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_VOTER_SUBJECT)->end()
-                                ->end()
-                                ->end()
-                            ->end()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_TRANSLATION)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(AssortmentGroupTranslationInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(AssortmentGroupTranslationType::class)->end()
-                                    ->end()
-                                ->end()
-                            ->end()
+                        ->translatedResourceNode(
+                            'assortment_group',
+                            AssortmentGroupInterface::class,
+                            AssortmentGroupFactory::class,
+                            AssortmentGroupRepository::class,
+                            AssortmentGroupManager::class,
+                            AssortmentGroupType::class,
+                            AssortmentGroupTranslationInterface::class,
+                            AssortmentGroupTranslationType::class
+                        )
                         ->end()
-                        // End AssortmentGroup
-                        // Start Supplier
-                        ->arrayNode('supplier')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(SupplierInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(SupplierFactory::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(SupplierRepository::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(SupplierManager::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(SupplierType::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_VOTER_SUBJECT)->end()
-                                ->end()
-                                ->end()
-                            ->end()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_TRANSLATION)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(SupplierTranslationInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(SupplierTranslationType::class)->end()
-                                    ->end()
-                                ->end()
-                            ->end()
+                        ->translatedResourceNode(
+                            'supplier',
+                            SupplierInterface::class,
+                            SupplierFactory::class,
+                            SupplierRepository::class,
+                            SupplierManager::class,
+                            SupplierType::class,
+                            SupplierTranslationInterface::class,
+                            SupplierTranslationType::class
+                        )
                         ->end()
-                        // End Supplier
-                        // Start ProductSetProduct
-                        ->arrayNode('product_set_product')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(ProductSetProductInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(ProductSetProductFactory::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(ProductSetProductRepository::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(ProductSetProductManager::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(ProductSetProductType::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_VOTER_SUBJECT)->end()
-                                ->end()
-                                ->end()
-                            ->end()
+                        ->resourceNode(
+                            'product_set_product',
+                            ProductSetProductInterface::class,
+                            ProductSetProductFactory::class,
+                            ProductSetProductRepository::class,
+                            ProductSetProductManager::class,
+                            ProductSetProductType::class
+                        )
                         ->end()
-                        // End ProductSetProduct
-                        // Start Product
-                        ->arrayNode('category')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(CategoryInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(CategoryFactory::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(CategoryRepository::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(CategoryManager::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(CategoryType::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_VOTER_SUBJECT)->end()
-                                ->end()
-                                ->end()
-                            ->end()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_TRANSLATION)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(CategoryTranslationInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(CategoryTranslationType::class)->end()
-                                    ->end()
-                                ->end()
-                            ->end()
+                        ->translatedResourceNode(
+                            'supplier',
+                            SupplierInterface::class,
+                            SupplierFactory::class,
+                            SupplierRepository::class,
+                            SupplierManager::class,
+                            SupplierType::class,
+                            SupplierTranslationInterface::class,
+                            SupplierTranslationType::class
+                        )
                         ->end()
-                        // End Product
-                        // Start ProductCategory
-                        ->arrayNode('product_category')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->arrayNode(BE::CONFIG_KEY_CLASSES)
-                                ->children()
-                                    ->scalarNode(BE::CONFIG_KEY_ENTITY)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_INTERFACE)->defaultValue(ProductCategoryInterface::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FACTORY)->defaultValue(ProductCategoryFactory::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_REPOSITORY)->defaultValue(ProductCategoryRepository::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_MANAGER)->defaultValue(ProductCategoryManager::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_FORM)->defaultValue(ProductCategoryType::class)->end()
-                                    ->scalarNode(BE::CONFIG_KEY_VOTER_SUBJECT)->end()
-                                ->end()
-                                ->end()
-                            ->end()
+                        ->translatedResourceNode(
+                            'category',
+                            CategoryInterface::class,
+                            CategoryFactory::class,
+                            CategoryRepository::class,
+                            CategoryManager::class,
+                            CategoryType::class,
+                            CategoryTranslationInterface::class,
+                            CategoryTranslationType::class
+                        )
                         ->end()
-                        // End ProductCategory
+                        ->resourceNode(
+                            'product_category',
+                            ProductCategoryInterface::class,
+                            ProductCategoryFactory::class,
+                            ProductCategoryRepository::class,
+                            ProductCategoryManager::class,
+                            ProductCategoryType::class
+                        )
+                        ->end()
                     ->end()
                 ->end()
             ->end();
