@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use LSB\ProductBundle\Entity\Product;
 use LSB\ProductBundle\Entity\ProductSetProduct;
+use LSB\UtilityBundle\Repository\BaseRepository;
 use LSB\UtilityBundle\Repository\PaginationInterface;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
 
@@ -14,7 +13,7 @@ use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
  * Class ProductSetProductRepository
  * @package LSB\ProductBundle\Repository
  */
-class ProductSetProductRepository extends ServiceEntityRepository implements ProductSetProductRepositoryInterface, PaginationInterface
+class ProductSetProductRepository extends BaseRepository implements ProductSetProductRepositoryInterface, PaginationInterface
 {
     use PaginationRepositoryTrait;
 
