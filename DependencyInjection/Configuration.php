@@ -4,15 +4,25 @@ declare(strict_types=1);
 namespace LSB\ProductBundle\DependencyInjection;
 
 use Entity\Repository\CategoryRepository;
+use LSB\ProductBundle\Entity\AssortmentGroup;
 use LSB\ProductBundle\Entity\AssortmentGroupInterface;
+use LSB\ProductBundle\Entity\AssortmentGroupTranslation;
 use LSB\ProductBundle\Entity\AssortmentGroupTranslationInterface;
+use LSB\ProductBundle\Entity\Category;
 use LSB\ProductBundle\Entity\CategoryInterface;
+use LSB\ProductBundle\Entity\CategoryTranslation;
 use LSB\ProductBundle\Entity\CategoryTranslationInterface;
+use LSB\ProductBundle\Entity\Product;
+use LSB\ProductBundle\Entity\ProductCategory;
 use LSB\ProductBundle\Entity\ProductCategoryInterface;
 use LSB\ProductBundle\Entity\ProductInterface;
+use LSB\ProductBundle\Entity\ProductSetProduct;
 use LSB\ProductBundle\Entity\ProductSetProductInterface;
+use LSB\ProductBundle\Entity\ProductTranslation;
 use LSB\ProductBundle\Entity\ProductTranslationInterface;
+use LSB\ProductBundle\Entity\Supplier;
 use LSB\ProductBundle\Entity\SupplierInterface;
+use LSB\ProductBundle\Entity\SupplierTranslation;
 use LSB\ProductBundle\Entity\SupplierTranslationInterface;
 use LSB\ProductBundle\Factory\AssortmentGroupFactory;
 use LSB\ProductBundle\Factory\CategoryFactory;
@@ -69,39 +79,46 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->translatedResourceNode(
                             'product',
+                            Product::class,
                             ProductInterface::class,
                             ProductFactory::class,
                             ProductRepository::class,
                             ProductManager::class,
                             ProductType::class,
+                            ProductTranslation::class,
                             ProductTranslationInterface::class,
                             ProductTranslationType::class
                         )
                         ->end()
                         ->translatedResourceNode(
                             'assortment_group',
+                            AssortmentGroup::class,
                             AssortmentGroupInterface::class,
                             AssortmentGroupFactory::class,
                             AssortmentGroupRepository::class,
                             AssortmentGroupManager::class,
                             AssortmentGroupType::class,
+                            AssortmentGroupTranslation::class,
                             AssortmentGroupTranslationInterface::class,
                             AssortmentGroupTranslationType::class
                         )
                         ->end()
                         ->translatedResourceNode(
                             'supplier',
+                            Supplier::class,
                             SupplierInterface::class,
                             SupplierFactory::class,
                             SupplierRepository::class,
                             SupplierManager::class,
                             SupplierType::class,
+                            SupplierTranslation::class,
                             SupplierTranslationInterface::class,
                             SupplierTranslationType::class
                         )
                         ->end()
                         ->resourceNode(
                             'product_set_product',
+                            ProductSetProduct::class,
                             ProductSetProductInterface::class,
                             ProductSetProductFactory::class,
                             ProductSetProductRepository::class,
@@ -110,29 +127,21 @@ class Configuration implements ConfigurationInterface
                         )
                         ->end()
                         ->translatedResourceNode(
-                            'supplier',
-                            SupplierInterface::class,
-                            SupplierFactory::class,
-                            SupplierRepository::class,
-                            SupplierManager::class,
-                            SupplierType::class,
-                            SupplierTranslationInterface::class,
-                            SupplierTranslationType::class
-                        )
-                        ->end()
-                        ->translatedResourceNode(
                             'category',
+                            Category::class,
                             CategoryInterface::class,
                             CategoryFactory::class,
                             CategoryRepository::class,
                             CategoryManager::class,
                             CategoryType::class,
+                            CategoryTranslation::class,
                             CategoryTranslationInterface::class,
                             CategoryTranslationType::class
                         )
                         ->end()
                         ->resourceNode(
                             'product_category',
+                            ProductCategory::class,
                             ProductCategoryInterface::class,
                             ProductCategoryFactory::class,
                             ProductCategoryRepository::class,
