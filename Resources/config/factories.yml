@@ -1,57 +1,46 @@
 services:
-    LSB\ProductBundle\Factory\ProductFactory:
-        arguments:
-            - '%lsb_product.config.resources.product.class.entity%'
+    LSB\ProductBundle\Factory\ProductFactory: ~
 
     lsb_product_factory_product:
         alias: 'LSB\ProductBundle\Factory\ProductFactory'
 
     LSB\ProductBundle\Factory\ProductFactoryInterface: '@LSB\ProductBundle\Factory\ProductFactory'
 
-    LSB\ProductBundle\Factory\ProductSetProductFactory:
-        arguments:
-            - '%lsb_product.config.resources.product_set_product.class.entity%'
+    LSB\ProductBundle\Factory\ProductSetProductFactory: ~
 
     lsb_product_factory_product_set_product:
         alias: 'LSB\ProductBundle\Factory\ProductSetProductFactory'
 
     LSB\ProductBundle\Factory\ProductSetProductFactoryInterface: '@LSB\ProductBundle\Factory\ProductSetProductFactory'
 
-    LSB\ProductBundle\Factory\AssortmentGroupFactory:
-        arguments:
-            - '%lsb_product.config.resources.assortment_group.class.entity%'
+    LSB\ProductBundle\Factory\AssortmentGroupFactory: ~
 
     lsb_product_factory_assortment_group:
         alias: LSB\ProductBundle\Factory\AssortmentGroupFactory
 
     LSB\ProductBundle\Factory\AssortmentGroupFactoryInterface: '@LSB\ProductBundle\Factory\AssortmentGroupFactory'
 
-    LSB\ProductBundle\Factory\SupplierFactory:
-        arguments:
-            - '%lsb_product.config.resources.supplier.class.entity%'
+    LSB\ProductBundle\Factory\SupplierFactory: ~
 
     lsb_product_factory_supplier:
         alias: LSB\ProductBundle\Factory\SupplierFactory
 
     LSB\ProductBundle\Factory\SupplierFactoryInterface: '@LSB\ProductBundle\Factory\SupplierFactory'
 
-    LSB\ProductBundle\Factory\CategoryFactory:
-        arguments:
-            - '%lsb_product.config.resources.category.class.entity%'
+    LSB\ProductBundle\Factory\CategoryFactory: ~
+
     lsb_product_factory_category:
         alias: LSB\ProductBundle\Factory\CategoryFactory
     LSB\ProductBundle\Factory\CategoryFactoryInterface: '@LSB\ProductBundle\Factory\CategoryFactory'
 
-    LSB\ProductBundle\Factory\ProductCategoryFactory:
-        arguments:
-            - '%lsb_product.config.resources.product_category.class.entity%'
+    LSB\ProductBundle\Factory\ProductCategoryFactory: ~
+
     lsb_product_factory_product_category:
         alias: LSB\ProductBundle\Factory\ProductCategoryFactory
     LSB\ProductBundle\Factory\ProductCategoryFactoryInterface: '@LSB\ProductBundle\Factory\ProductCategoryFactory'
 
-    LSB\ProductBundle\Factory\CategoryTranslationFactory:
-        arguments:
-            - '%lsb_product.config.resources.category_translation.class.entity%'
+    LSB\ProductBundle\Factory\CategoryTranslationFactory: ~
+
     lsb_product_factory_category_translation:
         alias: LSB\ProductBundle\Factory\CategoryTranslationFactory
     LSB\ProductBundle\Factory\CategoryTranslationFactoryInterface: '@LSB\ProductBundle\Factory\CategoryTranslationFactory'
