@@ -6,14 +6,13 @@ namespace LSB\ProductBundle\Repository;
 use Doctrine\Persistence\ManagerRegistry;
 use LSB\ProductBundle\Entity\ProductCategory;
 use LSB\UtilityBundle\Repository\BaseRepository;
-use LSB\UtilityBundle\Repository\PaginationInterface;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
 
 /**
  * Class ProductCategoryRepository
  * @package LSB\ProductBundle\Repository
  */
-class ProductCategoryRepository extends BaseRepository implements ProductCategoryRepositoryInterface, PaginationInterface
+class ProductCategoryRepository extends BaseRepository implements ProductCategoryRepositoryInterface
 {
     use PaginationRepositoryTrait;
 

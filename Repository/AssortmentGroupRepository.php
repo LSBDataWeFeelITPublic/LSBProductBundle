@@ -6,14 +6,13 @@ namespace LSB\ProductBundle\Repository;
 use LSB\ProductBundle\Entity\AssortmentGroup;
 use Doctrine\Persistence\ManagerRegistry;
 use LSB\UtilityBundle\Repository\BaseRepository;
-use LSB\UtilityBundle\Repository\PaginationInterface;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
 
 /**
  * Class AssortmentGroupRepository
  * @package LSB\ProductBundle\Repository
  */
-class AssortmentGroupRepository extends BaseRepository implements AssortmentGroupRepositoryInterface, PaginationInterface
+class AssortmentGroupRepository extends BaseRepository implements AssortmentGroupRepositoryInterface
 {
     use PaginationRepositoryTrait;
 

@@ -3,18 +3,16 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use LSB\ProductBundle\Entity\Supplier;
 use LSB\UtilityBundle\Repository\BaseRepository;
-use LSB\UtilityBundle\Repository\PaginationInterface;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
 
 /**
  * Class SupplierRepository
  * @package LSB\ProductBundle\Repository
  */
-class SupplierRepository extends BaseRepository implements SupplierRepositoryInterface, PaginationInterface
+class SupplierRepository extends BaseRepository implements SupplierRepositoryInterface
 {
     use PaginationRepositoryTrait;
 
