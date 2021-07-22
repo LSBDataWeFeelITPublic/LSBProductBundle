@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("number")
  * @MappedSuperclass
  */
-class Product implements ProductInterface, TranslatableInterface
+class Product implements ProductInterface
 {
     use UuidTrait;
     use TranslatableTrait;
@@ -182,11 +182,11 @@ class Product implements ProductInterface, TranslatableInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->number;
+        return (string) $this->uuid;
     }
 
     /**
