@@ -20,6 +20,10 @@ use LSB\ProductBundle\Entity\ProductSetProduct;
 use LSB\ProductBundle\Entity\ProductSetProductInterface;
 use LSB\ProductBundle\Entity\ProductTranslation;
 use LSB\ProductBundle\Entity\ProductTranslationInterface;
+use LSB\ProductBundle\Entity\Storage;
+use LSB\ProductBundle\Entity\StorageInterface;
+use LSB\ProductBundle\Entity\StorageTranslation;
+use LSB\ProductBundle\Entity\StorageTranslationInterface;
 use LSB\ProductBundle\Entity\Supplier;
 use LSB\ProductBundle\Entity\SupplierInterface;
 use LSB\ProductBundle\Entity\SupplierTranslation;
@@ -29,6 +33,7 @@ use LSB\ProductBundle\Factory\CategoryFactory;
 use LSB\ProductBundle\Factory\ProductCategoryFactory;
 use LSB\ProductBundle\Factory\ProductFactory;
 use LSB\ProductBundle\Factory\ProductSetProductFactory;
+use LSB\ProductBundle\Factory\StorageFactory;
 use LSB\ProductBundle\Factory\SupplierFactory;
 use LSB\ProductBundle\Form\AssortmentGroupTranslationType;
 use LSB\ProductBundle\Form\AssortmentGroupType;
@@ -37,6 +42,8 @@ use LSB\ProductBundle\Form\CategoryType;
 use LSB\ProductBundle\Form\ProductCategoryType;
 use LSB\ProductBundle\Form\ProductSetProductType;
 use LSB\ProductBundle\Form\ProductTranslationType;
+use LSB\ProductBundle\Form\StorageTranslationType;
+use LSB\ProductBundle\Form\StorageType;
 use LSB\ProductBundle\Form\SupplierTranslationType;
 use LSB\ProductBundle\Form\SupplierType;
 use LSB\ProductBundle\LSBProductBundle;
@@ -45,11 +52,13 @@ use LSB\ProductBundle\Manager\CategoryManager;
 use LSB\ProductBundle\Manager\ProductCategoryManager;
 use LSB\ProductBundle\Manager\ProductManager;
 use LSB\ProductBundle\Manager\ProductSetProductManager;
+use LSB\ProductBundle\Manager\StorageManager;
 use LSB\ProductBundle\Manager\SupplierManager;
 use LSB\ProductBundle\Repository\AssortmentGroupRepository;
 use LSB\ProductBundle\Repository\ProductCategoryRepository;
 use LSB\ProductBundle\Repository\ProductRepository;
 use LSB\ProductBundle\Repository\ProductSetProductRepository;
+use LSB\ProductBundle\Repository\StorageRepository;
 use LSB\ProductBundle\Repository\SupplierRepository;
 use LSB\ProductBundle\Form\ProductType;
 use LSB\UtilityBundle\Config\Definition\Builder\TreeBuilder;
@@ -147,6 +156,19 @@ class Configuration implements ConfigurationInterface
                             ProductCategoryRepository::class,
                             ProductCategoryManager::class,
                             ProductCategoryType::class
+                        )
+                        ->end()
+                        ->translatedResourceNode(
+                            'storage',
+                            Storage::class,
+                            StorageInterface::class,
+                            StorageFactory::class,
+                            StorageRepository::class,
+                            StorageManager::class,
+                            StorageType::class,
+                            StorageTranslation::class,
+                            StorageTranslationInterface::class,
+                            StorageTranslationType::class
                         )
                         ->end()
                     ->end()

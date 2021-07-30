@@ -40,3 +40,11 @@ services:
     LSB\ProductBundle\Form\SupplierTranslationType:
         tags:
             - { name: form.type }
+
+    LSB\ProductBundle\Form\StorageType:
+        tags:
+            - { name: form.type }
+
+    LSB\ProductBundle\Form\StorageTranslationType:
+        tags:
+            - { name: form.type }

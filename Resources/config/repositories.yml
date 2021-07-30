@@ -36,3 +36,8 @@ services:
         arguments:
             - '@doctrine'
     LSB\ProductBundle\Repository\CategoryTranslationRepositoryInterface: '@LSB\ProductBundle\Repository\CategoryTranslationRepository'
+
+    LSB\ProductBundle\Repository\StorageRepository:
+        arguments:
+            - '@doctrine'
+    LSB\ProductBundle\Repository\StorageRepositoryInterface: '@LSB\ProductBundle\Repository\StorageRepository'

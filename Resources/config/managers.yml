@@ -22,3 +22,7 @@ services:
     LSB\ProductBundle\Manager\ProductCategoryManager:
         arguments:
             - '@lsb_utility_object_manager'
+
+    LSB\ProductBundle\Manager\StorageManager:
+        arguments:
+            - '@lsb_utility_object_manager'

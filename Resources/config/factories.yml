@@ -44,3 +44,8 @@ services:
     lsb_product_factory_category_translation:
         alias: LSB\ProductBundle\Factory\CategoryTranslationFactory
     LSB\ProductBundle\Factory\CategoryTranslationFactoryInterface: '@LSB\ProductBundle\Factory\CategoryTranslationFactory'
+
+    LSB\ProductBundle\Factory\StorageFactory: null
+    lsb_product_factory_storage:
+        alias: LSB\ProductBundle\Factory\StorageFactory
+    LSB\ProductBundle\Factory\StorageFactoryInterface: '@LSB\ProductBundle\Factory\StorageFactory'
