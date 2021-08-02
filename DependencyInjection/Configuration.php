@@ -16,6 +16,8 @@ use LSB\ProductBundle\Entity\Product;
 use LSB\ProductBundle\Entity\ProductCategory;
 use LSB\ProductBundle\Entity\ProductCategoryInterface;
 use LSB\ProductBundle\Entity\ProductInterface;
+use LSB\ProductBundle\Entity\ProductQuantity;
+use LSB\ProductBundle\Entity\ProductQuantityInterface;
 use LSB\ProductBundle\Entity\ProductSetProduct;
 use LSB\ProductBundle\Entity\ProductSetProductInterface;
 use LSB\ProductBundle\Entity\ProductTranslation;
@@ -32,6 +34,7 @@ use LSB\ProductBundle\Factory\AssortmentGroupFactory;
 use LSB\ProductBundle\Factory\CategoryFactory;
 use LSB\ProductBundle\Factory\ProductCategoryFactory;
 use LSB\ProductBundle\Factory\ProductFactory;
+use LSB\ProductBundle\Factory\ProductQuantityFactory;
 use LSB\ProductBundle\Factory\ProductSetProductFactory;
 use LSB\ProductBundle\Factory\StorageFactory;
 use LSB\ProductBundle\Factory\SupplierFactory;
@@ -40,6 +43,7 @@ use LSB\ProductBundle\Form\AssortmentGroupType;
 use LSB\ProductBundle\Form\CategoryTranslationType;
 use LSB\ProductBundle\Form\CategoryType;
 use LSB\ProductBundle\Form\ProductCategoryType;
+use LSB\ProductBundle\Form\ProductQuantityType;
 use LSB\ProductBundle\Form\ProductSetProductType;
 use LSB\ProductBundle\Form\ProductTranslationType;
 use LSB\ProductBundle\Form\StorageTranslationType;
@@ -51,11 +55,13 @@ use LSB\ProductBundle\Manager\AssortmentGroupManager;
 use LSB\ProductBundle\Manager\CategoryManager;
 use LSB\ProductBundle\Manager\ProductCategoryManager;
 use LSB\ProductBundle\Manager\ProductManager;
+use LSB\ProductBundle\Manager\ProductQuantityManager;
 use LSB\ProductBundle\Manager\ProductSetProductManager;
 use LSB\ProductBundle\Manager\StorageManager;
 use LSB\ProductBundle\Manager\SupplierManager;
 use LSB\ProductBundle\Repository\AssortmentGroupRepository;
 use LSB\ProductBundle\Repository\ProductCategoryRepository;
+use LSB\ProductBundle\Repository\ProductQuantityRepository;
 use LSB\ProductBundle\Repository\ProductRepository;
 use LSB\ProductBundle\Repository\ProductSetProductRepository;
 use LSB\ProductBundle\Repository\StorageRepository;
@@ -169,6 +175,16 @@ class Configuration implements ConfigurationInterface
                             StorageTranslation::class,
                             StorageTranslationInterface::class,
                             StorageTranslationType::class
+                        )
+                        ->end()
+                        ->resourceNode(
+                            'product_quantity',
+                            ProductQuantity::class,
+                            ProductQuantityInterface::class,
+                            ProductQuantityFactory::class,
+                            ProductQuantityRepository::class,
+                            ProductQuantityManager::class,
+                            ProductQuantityType::class
                         )
                         ->end()
                     ->end()

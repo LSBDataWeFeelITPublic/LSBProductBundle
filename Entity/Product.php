@@ -169,7 +169,6 @@ class Product implements ProductInterface
     public function __construct()
     {
         $this->generateUuid();
-        $this->products = new ArrayCollection();
     }
 
     /**
@@ -179,6 +178,16 @@ class Product implements ProductInterface
     {
         $this->id = null;
         $this->generateUuid(true);
+    }
+
+    /**
+     * TODO
+     * @param string|null $storageNumber
+     * @return int
+     */
+    public function getShippingDays(?string $storageNumber): int
+    {
+        return 1;
     }
 
     /**

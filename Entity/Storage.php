@@ -63,6 +63,12 @@ class Storage implements StorageInterface
     protected bool $isDefault = false;
 
     /**
+     * @var integer|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $deliveryTerm;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -194,6 +200,24 @@ class Storage implements StorageInterface
     public function setIsDefault(bool $isDefault): self
     {
         $this->isDefault = $isDefault;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDeliveryTerm(): ?int
+    {
+        return $this->deliveryTerm;
+    }
+
+    /**
+     * @param int|null $deliveryTerm
+     * @return $this
+     */
+    public function setDeliveryTerm(?int $deliveryTerm): static
+    {
+        $this->deliveryTerm = $deliveryTerm;
         return $this;
     }
 }

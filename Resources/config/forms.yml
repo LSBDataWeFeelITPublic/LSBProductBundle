@@ -48,3 +48,7 @@ services:
     LSB\ProductBundle\Form\StorageTranslationType:
         tags:
             - { name: form.type }
+
+    LSB\ProductBundle\Form\ProductQuantityType:
+        tags:
+            - { name: form.type }

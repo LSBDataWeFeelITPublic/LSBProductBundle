@@ -49,3 +49,8 @@ services:
     lsb_product_factory_storage:
         alias: LSB\ProductBundle\Factory\StorageFactory
     LSB\ProductBundle\Factory\StorageFactoryInterface: '@LSB\ProductBundle\Factory\StorageFactory'
+
+    LSB\ProductBundle\Factory\ProductQuantityFactory: null
+    lsb_product_factory_product_quantity:
+        alias: LSB\ProductBundle\Factory\ProductQuantityFactory
+    LSB\ProductBundle\Factory\ProductQuantityFactoryInterface: '@LSB\ProductBundle\Factory\ProductQuantityFactory'

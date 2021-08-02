@@ -1,1 +1,6 @@
 services:
+    LSB\ProductBundle\Service\StorageService:
+        arguments:
+            - '@parameter_bag'
+            - '@LSB\ProductBundle\Manager\ProductQuantityManager'
+            - '@LSB\ProductBundle\Manager\StorageManager'

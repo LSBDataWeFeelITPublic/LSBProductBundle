@@ -5,6 +5,7 @@ namespace LSB\ProductBundle\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
 use LSB\ProductBundle\Entity\Storage;
+use LSB\ProductBundle\Entity\StorageInterface;
 use LSB\UtilityBundle\Repository\BaseRepository;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
 
@@ -26,4 +27,20 @@ class StorageRepository extends BaseRepository implements StorageRepositoryInter
         parent::__construct($registry, $stringClass ?? Storage::class);
     }
 
+    /**
+     * @return StorageInterface|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getFirstLocaleStorage(): ?StorageInterface
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->select('s')
+            ->where('s.type = :locale')
+            ->setParameter('locale', StorageInterface::TYPE_LOCAL)
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(1)
+        ;
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }

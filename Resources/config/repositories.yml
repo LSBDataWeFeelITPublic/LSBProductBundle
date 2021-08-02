@@ -41,3 +41,8 @@ services:
         arguments:
             - '@doctrine'
     LSB\ProductBundle\Repository\StorageRepositoryInterface: '@LSB\ProductBundle\Repository\StorageRepository'
+
+    LSB\ProductBundle\Repository\ProductQuantityRepository:
+        arguments:
+            - '@doctrine'
+    LSB\ProductBundle\Repository\ProductQuantityRepositoryInterface: '@LSB\ProductBundle\Repository\ProductQuantityRepository'
