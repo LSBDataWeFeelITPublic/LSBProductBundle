@@ -8,6 +8,7 @@ use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\ProductBundle\Entity\StorageInterface;
 use LSB\ProductBundle\Manager\ProductQuantityManager;
 use LSB\ProductBundle\Manager\StorageManager;
+use LSB\UtilityBundle\Interfaces\Base\BasePackageInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
@@ -15,16 +16,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class StorageService
 {
-    const BACKORDER_PACKAGE_ITEM_SHIPPING_DAYS = 999;
-    const LOCAL_PACKAGE_MAX_SHIPPING_DAYS = 2;
-    const PACKAGE_MAX_PERIOD = 1;
-
-    //TODO refactor
-    const PACKAGE_TYPE_FROM_LOCAL_STOCK = 10;
-    const PACKAGE_TYPE_FROM_REMOTE_STOCK = 20;
-    const PACKAGE_TYPE_NEXT_SHIPPING = 30;
-    const PACKAGE_TYPE_FROM_SUPPLIER = 40;
-    const PACKAGE_TYPE_BACKORDER = 50;
 
     protected StorageManager $storageManager;
 
@@ -134,8 +125,8 @@ class StorageService
      */
     protected function calculateMaxShippingDaysForPackage(int $shippingDays): int
     {
-        $shippingDays -= self::LOCAL_PACKAGE_MAX_SHIPPING_DAYS;
-        return ceil($shippingDays / self::PACKAGE_MAX_PERIOD) * self::PACKAGE_MAX_PERIOD + self::LOCAL_PACKAGE_MAX_SHIPPING_DAYS;
+        $shippingDays -= BasePackageInterface::LOCAL_PACKAGE_MAX_SHIPPING_DAYS;
+        return ceil($shippingDays / BasePackageInterface::PACKAGE_MAX_PERIOD) * BasePackageInterface::PACKAGE_MAX_PERIOD + BasePackageInterface::LOCAL_PACKAGE_MAX_SHIPPING_DAYS;
     }
 
     /**
@@ -173,16 +164,16 @@ class StorageService
             || array_key_exists($productId, $this->notReservedQuantity) && !array_key_exists($type, $this->notReservedQuantity[$productId])
             || array_key_exists($productId, $this->notReservedQuantity) && array_key_exists($shippingDays, $this->notReservedQuantity[$productId][$type])
         ) {
-            if ($type == self::PACKAGE_TYPE_FROM_LOCAL_STOCK) {
+            if ($type == BasePackageInterface::PACKAGE_TYPE_FROM_LOCAL_STOCK) {
                 $this->notReservedQuantity[$productId][$type] = $maxQuantity;
-            } elseif ($type == self::PACKAGE_TYPE_FROM_REMOTE_STOCK && !array_key_exists($shippingDays, $this->notReservedQuantity[$productId][$type])) {
+            } elseif ($type == BasePackageInterface::PACKAGE_TYPE_FROM_REMOTE_STOCK && !array_key_exists($shippingDays, $this->notReservedQuantity[$productId][$type])) {
                 $this->notReservedQuantity[$productId][$type][$shippingDays] = $maxQuantity;
             }
 
             return $reserveQuantity;
         }
 
-        if ($type === self::PACKAGE_TYPE_FROM_LOCAL_STOCK) {
+        if ($type === BasePackageInterface::PACKAGE_TYPE_FROM_LOCAL_STOCK) {
             $availableQuantity = $this->notReservedQuantity[$productId][$type];
 
             $newAvailableQuantity = $availableQuantity - $reserveQuantity;
@@ -194,7 +185,7 @@ class StorageService
                 $this->notReservedQuantity[$productId][$type] = 0;
                 return $availableQuantity;
             }
-        } elseif ($type === self::PACKAGE_TYPE_FROM_REMOTE_STOCK) {
+        } elseif ($type === BasePackageInterface::PACKAGE_TYPE_FROM_REMOTE_STOCK) {
             $availableQuantity = $this->notReservedQuantity[$productId][$type][$shippingDays];
 
             $newAvailableQuantity = $availableQuantity - $reserveQuantity;
@@ -299,7 +290,7 @@ class StorageService
             } elseif ($deliveryStorage->getStorage()->getType() === StorageInterface::TYPE_LOCAL) {
                 $realShippingDays = $product->getShippingDays($this->localStorageNumber);
             } else {
-                $realShippingDays = self::BACKORDER_PACKAGE_ITEM_SHIPPING_DAYS;
+                $realShippingDays = BasePackageInterface::BACKORDER_PACKAGE_ITEM_SHIPPING_DAYS;
             }
 
             $maxShippingDays = (int)$realShippingDays;
@@ -384,7 +375,7 @@ class StorageService
          * @var array $storageData
          */
         foreach ($storages as $maxShippingDays => $storageData) {
-            if (abs($sourceMaxShippingDays - $maxShippingDays) <= self::PACKAGE_MAX_PERIOD
+            if (abs($sourceMaxShippingDays - $maxShippingDays) <= BasePackageInterface::PACKAGE_MAX_PERIOD
                 && ($maxShippingDays < $closest && !$checkGreater || !$closest)) {
                 $closest = $maxShippingDays;
             }

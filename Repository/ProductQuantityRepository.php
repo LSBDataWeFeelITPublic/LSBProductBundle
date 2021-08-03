@@ -5,7 +5,7 @@ namespace LSB\ProductBundle\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
 use LSB\ProductBundle\Entity\ProductQuantity;
-use LSB\ProductBundle\Entity\Storage;
+use LSB\ProductBundle\Entity\ProductQuantityInterface;
 use LSB\ProductBundle\Entity\StorageInterface;
 use LSB\UtilityBundle\Repository\BaseRepository;
 use LSB\UtilityBundle\Repository\PaginationRepositoryTrait;
@@ -83,12 +83,12 @@ class ProductQuantityRepository extends BaseRepository implements ProductQuantit
     }
 
     /**
-     * @param $productId
+     * @param int $productId
      * @return int
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRemoteQuantityForProduct($productId): int
+    public function getRemoteQuantityForProduct(int $productId): int
     {
 
         $qb = $this->createQueryBuilder('pq');
@@ -102,6 +102,24 @@ class ProductQuantityRepository extends BaseRepository implements ProductQuantit
             ->setParameter('productId', $productId);
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param int $productId
+     * @param int $storageId
+     * @return ProductQuantityInterface|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getProductQuantityByProductAndStorage(int $productId, int $storageId): ?ProductQuantityInterface
+    {
+        $qb = $this->createQueryBuilder('pq')
+            ->where('pq.product = :productId')
+            ->andWhere('pq.storage = :storageId')
+            ->setParameter('productId', $productId)
+            ->setParameter('storageId', $storageId)
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
 }

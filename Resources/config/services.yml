@@ -4,3 +4,11 @@ services:
             - '@parameter_bag'
             - '@LSB\ProductBundle\Manager\ProductQuantityManager'
             - '@LSB\ProductBundle\Manager\StorageManager'
+
+    LSB\ProductBundle\Service\StorageBookingService:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@parameter_bag'
+            - '@LSB\ProductBundle\Manager\StorageManager'
+            - '@LSB\ProductBundle\Service\StorageService'
+            - '@LSB\ProductBundle\Manager\ProductQuantityManager'

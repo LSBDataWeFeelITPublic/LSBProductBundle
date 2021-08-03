@@ -38,8 +38,24 @@ class StorageRepository extends BaseRepository implements StorageRepositoryInter
             ->where('s.type = :locale')
             ->setParameter('locale', StorageInterface::TYPE_LOCAL)
             ->orderBy('s.id', 'ASC')
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param string $number
+     * @return StorageInterface|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getLocalStorageByNumber(string $number): ?StorageInterface
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->where('s.type = :localStorageType')
+            ->setParameter('localStorageType', StorageInterface::TYPE_LOCAL)
+            ->andWhere('s.number = :storageNumber')
+            ->setParameter('storageNumber', $number)
+            ->setMaxResults(1);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

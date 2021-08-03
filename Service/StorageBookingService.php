@@ -1,75 +1,92 @@
 <?php
+declare(strict_types=1);
 
 namespace LSB\ProductBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use JetBrains\PhpStorm\Pure;
 use LSB\OrderBundle\Entity\OrderPackage;
+use LSB\OrderBundle\Entity\OrderPackageInterface;
+use LSB\OrderBundle\Entity\OrderPackageItem;
+use LSB\OrderBundle\Entity\OrderPackageItemInterface;
 use LSB\OrderBundle\Entity\PackageItem;
+use LSB\OrderBundle\Entity\PackageItemInterface;
+use LSB\OrderBundle\Manager\OrderPackageManager;
 use LSB\ProductBundle\Entity\Product;
+use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\ProductBundle\Entity\ProductQuantity;
+use LSB\ProductBundle\Entity\ProductQuantityInterface;
 use LSB\ProductBundle\Entity\Storage;
+use LSB\ProductBundle\Entity\StorageInterface;
 use LSB\ProductBundle\Exception\StorageException;
-use LSB\UtilBundle\Service\ParameterService;
+use LSB\ProductBundle\Manager\ProductQuantityManager;
+use LSB\ProductBundle\Manager\StorageManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-/**
- *
- */
 class StorageBookingService
 {
 
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
+    protected ProductQuantityManager $productQuantityManager;
 
-    /**
-     * @var ParameterBagInterface
-     */
+    protected OrderPackageManager $orderPackageManager;
+
+    protected EntityManagerInterface $em;
+
     protected ParameterBagInterface $ps;
 
-    /**
-     * @var StorageManager
-     */
-    protected $storageManager;
+    protected StorageManager $storageManager;
+
+    protected StorageService $storageService;
 
     /**
      * StorageBookingManager constructor.
      * @param EntityManagerInterface $em
-     * @param ParameterService $ps
+     * @param ParameterBagInterface $ps
      * @param StorageManager $storageManager
+     * @param StorageService $storageService
+     * @param ProductQuantityManager $productQuantityManager
+     * @param OrderPackageManager $orderPackageManager
      */
     public function __construct(
         EntityManagerInterface $em,
-        ParameterService $ps,
-        StorageManager $storageManager
+        ParameterBagInterface $ps,
+        StorageManager $storageManager,
+        StorageService $storageService,
+        ProductQuantityManager $productQuantityManager,
+        OrderPackageManager $orderPackageManager
     ) {
         $this->em = $em;
         $this->ps = $ps;
         $this->storageManager = $storageManager;
+        $this->storageService = $storageService;
+        $this->productQuantityManager = $productQuantityManager;
+        $this->orderPackageManager = $orderPackageManager;
     }
 
     /**
-     * Metoda rezerwująca stan magazynowy dla całej paczki
-     * Rezerwacja dokonywana jest tylko wtedy, gdy lokalny stan magazynowy pozwala w całości zrealizować paczkę
-     * Przed wykonaniem tej operacji należy najpierw zweryfikować możliwość jej przeprowadzenia
+     * Method makes a product quantity resevervation
+     * Reservations are made only when the local inventory is sufficient to fulfill the package in full
+     * Before performing this operation, you must first verify its feasibility
      *
-     * @param OrderPackage $orderPackage
-     * @param Storage|null $storage
+     * @param OrderPackageInterface $orderPackage
+     * @param StorageInterface|null $storage
      * @param bool $flush
      * @return bool
      * @throws StorageException
      */
-    public function bookOrderPackageItems(OrderPackage $orderPackage, ?Storage $storage = null, $flush = false): bool
+    public function bookOrderPackageItems(OrderPackageInterface $orderPackage, ?StorageInterface $storage = null, bool $flush = false): bool
     {
         if (!$storage) {
-            $storage = $this->getLocalStorage($this->ps->getParameter('localstorage_number'));
+            $storage = $this->getLocalStorage($this->ps->get('localstorage_number'));
         }
 
         $this->checkStorageCompatibility($storage);
 
-        if ($orderPackage->getItems()->count() && !$orderPackage->getIsStockReserved()) {
-
+        /**
+         * Temporary
+         * @var OrderPackage $orderPackage
+         */
+        if ($orderPackage->getOrderPackageItems()->count() && !$orderPackage->isStockReserved()) {
             $isOrderPackageBooked = true;
 
             $reservedQty = [];
@@ -77,24 +94,20 @@ class StorageBookingService
             $bookedProducts = [];
 
             /**
-             * @var PackageItem $packageItem
-             *
-             * Wyliczenie rezerwacji
+             * @var OrderPackageItem $orderPackageItem
              */
-            foreach ($orderPackage->getItems() as $packageItem) {
-                if ($packageItem->getProduct() && array_key_exists($packageItem->getProduct()->getId(), $reservedQty)) {
-                    $reservedQty[$packageItem->getProduct()->getId()] = $packageItem->getQuantity() + $reservedQty[$packageItem->getProduct()->getId()];
-                    $products[$packageItem->getProduct()->getId()] = $packageItem->getProduct();
-                } elseif ($packageItem->getProduct()) {
-                    $reservedQty[$packageItem->getProduct()->getId()] = $packageItem->getQuantity();
-                    $products[$packageItem->getProduct()->getId()] = $packageItem->getProduct();
+            foreach ($orderPackage->getOrderPackageItems() as $orderPackageItem) {
+                if ($orderPackageItem->getProduct() && array_key_exists($orderPackageItem->getProduct()->getId(), $reservedQty)) {
+                    $reservedQty[$orderPackageItem->getProduct()->getId()] = $orderPackageItem->getQuantity() + $reservedQty[$orderPackageItem->getProduct()->getId()];
+                    $products[$orderPackageItem->getProduct()->getId()] = $orderPackageItem->getProduct();
+                } elseif ($orderPackageItem->getProduct()) {
+                    $reservedQty[$orderPackageItem->getProduct()->getId()] = $orderPackageItem->getQuantity();
+                    $products[$orderPackageItem->getProduct()->getId()] = $orderPackageItem->getProduct();
                 }
             }
 
             /**
-             * Bookowanie
-             *
-             * @var Product $product
+             * @var ProductInterface $product
              */
             foreach ($products as $product) {
                 if (array_key_exists($product->getId(), $reservedQty)) {
@@ -107,21 +120,19 @@ class StorageBookingService
                 }
             }
 
-            //Oznaczanie pozycji w paczce jako zabookowane
             /**
-             * @var PackageItem $packageItem
+             * @var OrderPackageItemInterface $packageItem
              */
-            foreach ($orderPackage->getItems() as $packageItem) {
-                if ($packageItem->getProduct() && array_key_exists($packageItem->getProduct()->getId(), $bookedProducts)) {
-                    $packageItem->book($storage);
+            foreach ($orderPackage->getOrderPackageItems() as $orderPackageItem) {
+                if ($orderPackageItem->getProduct() && array_key_exists($orderPackageItem->getProduct()->getId(), $bookedProducts)) {
+                    $orderPackageItem->book($storage);
                 }
             }
 
-            //Nawet gdy niektórych pozycji nie udało się zabookować, oznaczamy paczkę jako zabookowaną
             $orderPackage->setIsStockReserved(true);
 
             if ($flush) {
-                $this->em->flush();
+                $this->orderPackageManager->update($orderPackage);
             }
             return true;
         }
@@ -130,33 +141,28 @@ class StorageBookingService
     }
 
     /**
-     * Metoda zwalnia rezerwację stanu magazynowego
-     *
-     * @param OrderPackage $orderPackage
+     * @param OrderPackageInterface $orderPackage
      * @param bool $flush
      * @return bool
      */
-    public function unbookOrderPackageItems(OrderPackage $orderPackage, $flush = false): bool
+    public function unbookOrderPackageItems(OrderPackageInterface $orderPackage, bool $flush = false): bool
     {
         $products = [];
         $reservedQty = [];
         $unbookedProducts = [];
         $storages = [];
 
-        if ($orderPackage->getItems()->count() && $orderPackage->getIsStockReserved()) {
+        if ($orderPackage->getOrderPackageItems()->count() && $orderPackage->isStockReserved()) {
 
             /**
-             * Wyliczenie sumarycznej ilości rezerwacji
-             *
              * @var PackageItem $packageItem
              */
-            foreach ($orderPackage->getItems() as $packageItem) {
+            foreach ($orderPackage->getOrderPackageItems() as $packageItem) {
                 if ($packageItem->getIsStockReserved()) {
-
                     $storage = $packageItem->getBookingStorage();
 
                     if (!$storage) {
-                        $storage = $this->getLocalStorage($this->ps->getParameter('localstorage_number'));
+                        $storage = $this->getLocalStorage($this->ps->get('localstorage_number'));
                     }
 
                     if (!array_key_exists($storage->getId(), $reservedQty)) {
@@ -174,16 +180,13 @@ class StorageBookingService
                 }
             }
 
-            //Aktualizacja stanu mag.
             foreach ($reservedQty as $storageId => $reservation) {
-
                 $storage = null;
                 if (array_key_exists($storageId, $storages)) {
                     $storage = $storages[$storageId];
                 }
 
                 foreach ($reservation as $productId => $qty) {
-
                     if (!array_key_exists($productId, $products)) {
                         continue;
                     }
@@ -199,11 +202,11 @@ class StorageBookingService
             }
 
             /**
-             * Zdejmowanie rezerwacji z pozycji
+             * Releasing product quantity reservation
              *
-             * @var PackageItem $packageItem
+             * @var PackageItemInterface $packageItem
              */
-            foreach ($orderPackage->getItems() as $packageItem) {
+            foreach ($orderPackage->getOrderPackageItems() as $packageItem) {
                 if ($packageItem->getProduct()
                     && $packageItem->getBookingStorage()
                     && array_key_exists($packageItem->getBookingStorage()->getId(), $unbookedProducts)
@@ -216,7 +219,7 @@ class StorageBookingService
             $orderPackage->setIsStockReserved(false);
 
             if ($flush) {
-                $this->em->flush();
+                $this->orderPackageManager->update($orderPackage);
             }
 
             return true;
@@ -226,46 +229,45 @@ class StorageBookingService
     }
 
     /**
-     * @param OrderPackage $orderPackage
-     * @param Storage|null $storage
+     * @param OrderPackageInterface $orderPackage
+     * @param StorageInterface|null $storage
      * @param bool $flush
+     * @throws StorageException
      */
-    public function refreshBookingOrderPackageItems(OrderPackage $orderPackage, ?Storage $storage = null, $flush = true): void
+    public function refreshBookingOrderPackageItems(OrderPackageInterface $orderPackage, ?StorageInterface $storage = null, bool $flush = true): void
     {
-        if (!$orderPackage->getIsStockReserved()) {
+        if (!$orderPackage->isStockReserved()) {
             return;
         }
 
         $this->unbookOrderPackageItems($orderPackage, true);
-        //Sprawdzamy czy w obecnej sytuacji wykonanie bookowania będzie możliwe
+
         $this->startReservation();
         if ($this->checkLocalBookingForOrderPackage($orderPackage)) {
             $this->bookOrderPackageItems($orderPackage);
         }
 
         if ($flush) {
-            $this->em->flush();
+            $this->orderPackageManager->update($orderPackage);
         }
     }
 
 
     /**
-     * Metoda zwalniająca rezerwację stanu magazynowego
-     *
-     * @param Product $product
-     * @param Storage|null $storage
+     * @param ProductInterface $product
+     * @param StorageInterface|null $storage
      * @param int $bookQuantity
      * @return bool
      */
-    public function unbookQuantity(Product $product, ?Storage $storage, int $bookQuantity): bool
+    public function unbookQuantity(ProductInterface $product, ?StorageInterface $storage, int $bookQuantity): bool
     {
         if (!$storage) {
-            $storage = $this->getLocalStorage($this->ps->getParameter('localstorage_number'));
+            $storage = $this->getLocalStorage($this->ps->get('localstorage_number'));
         }
 
         $productQuantity = $this->getProductQuantity($product, $storage);
 
-        if (!($productQuantity instanceof ProductQuantity) || !$this->isBookingAvailable($productQuantity, $bookQuantity)) {
+        if (!($productQuantity instanceof ProductQuantityInterface) || !$this->isBookingAvailable($productQuantity, $bookQuantity)) {
             return false;
         }
 
@@ -275,96 +277,83 @@ class StorageBookingService
     }
 
     /**
-     * Metoda rezerwująca stan magazynowy dla produktu
-     * Bookowanie dostępne jest wyłącznie w magazynie lokalnym
-     *
-     * @param Product $product
-     * @param Storage|null $storage
+     * @param ProductInterface $product
+     * @param StorageInterface|null $storage
      * @param int $bookQuantity
      * @return bool
      * @throws StorageException
      */
-    public function bookQuantity(Product $product, ?Storage $storage, int $bookQuantity): bool
+    public function bookQuantity(ProductInterface $product, ?StorageInterface $storage, int $bookQuantity): bool
     {
         if (!$storage) {
-            $storage = $this->getLocalStorage($this->ps->getParameter('localstorage_number'));
+            $storage = $this->getLocalStorage($this->ps->get('localstorage_number'));
         }
 
-        //Sprawdzamy zgodność magazynu
         $this->checkStorageCompatibility($storage);
 
         $productQuantity = $this->getProductQuantity($product, $storage);
 
         //Nie udało się pobrać stanu mag. nie możemy dokonać rezerwacji
-        if (!($productQuantity instanceof ProductQuantity) || !$this->isBookingAvailable($productQuantity, $bookQuantity)) {
+        if (!($productQuantity instanceof ProductQuantityInterface) || !$this->isBookingAvailable($productQuantity, $bookQuantity)) {
             return false;
         }
 
-        //Możemy dokonać rezerwacji
         $productQuantity->bookQuantity($bookQuantity);
 
         return true;
     }
 
     /**
-     * Sprawdza dostępność produktu w magazynie lokalnym już po złożeniu zamówienia
-     * Zwraca status bookowania dla całej paczki (w oparciu o rezerwację wstępną)
+     * Checks the availability of the product in the local stock, after placing the order
+     * Returns the booking status for the entire package
      *
-     * @param OrderPackage $orderPackage
-     * @param Storage|null $storage
+     * @param OrderPackageInterface $orderPackage
+     * @param StorageInterface|null $storage
      * @return bool
      */
-    public function checkLocalBookingForOrderPackage(OrderPackage $orderPackage, ?Storage $storage = null): bool
+    public function checkLocalBookingForOrderPackage(OrderPackageInterface $orderPackage, ?StorageInterface $storage = null): bool
     {
         $book = true;
 
+        //TODO refactor
         if (!$storage) {
-            $storage = $this->getLocalStorage($this->ps->getParameter('localstorage_number'));
+            $storage = $this->getLocalStorage($this->ps->get('localstorage_number'));
         }
 
         /**
-         * @var PackageItem $packageItem
+         * @var OrderPackageItem $packageItem
          */
-        foreach ($orderPackage->getItems() as $packageItem) {
-            //Obecnie sprawdzamy tylko stan lokalny
-
+        foreach ($orderPackage->getOrderPackageItems() as $packageItem) {
             $productQuantity = $this->getProductQuantity($packageItem->getProduct(), $storage);
             if (!($productQuantity instanceof ProductQuantity)) {
                 $book = false;
-                break; //łamie dwa foreach
+                break;
             }
 
-            $rawLocalQuantity = $productQuantity->getAvailableAtHand();
-
-            $availablelocalQuantity = $this->storageManager->checkReservedQuantity($packageItem->getProduct()->getId(), $packageItem->getQuantity(), Storage::TYPE_LOCAL, $rawLocalQuantity);
+            $rawLocalQuantity = $productQuantity->getQuantityAvailableAtHand();
+            $availablelocalQuantity = $this->storageService->checkReservedQuantity($packageItem->getProduct()->getId(), $packageItem->getQuantity(), StorageInterface::TYPE_LOCAL, $rawLocalQuantity);
 
             if ($availablelocalQuantity < $packageItem->getQuantity()) {
                 $book = false;
-                break; //łamie dwa foreach
+                break;
             }
         }
-
 
         return $book;
     }
 
-    /**
-     * Metoda czyści tymaczasową rezerwację stanów
-     */
     public function startReservation(): void
     {
-        $this->storageManager->clearReservedQuantityArray();
+        $this->storageService->clearReservedQuantityArray();
     }
 
     /**
      * @param string $number
      * @return Storage|null
      */
-    protected function getLocalStorage(string $number): ?Storage
+    protected function getLocalStorage(string $number): ?StorageInterface
     {
-        $localStorage = $this->em->getRepository(Storage::class)->getLocalStorageByNumber($number);
-
-        return $localStorage;
+        return $this->storageManager->getRepository()->getLocalStorageByNumber($number);
     }
 
     /**
@@ -372,27 +361,24 @@ class StorageBookingService
      * @param Storage $storage
      * @return ProductQuantity|null
      */
-    protected function getProductQuantity(Product $product, Storage $storage): ?ProductQuantity
+    protected function getProductQuantity(ProductInterface $product, StorageInterface $storage): ?ProductQuantityInterface
     {
-        $productQuantity = $this->em->getRepository(ProductQuantity::class)->getProductQuantityByProductAndStorage($product->getId(), $storage->getId());
-
-        return $productQuantity;
+        return $this->productQuantityManager->getRepository()->getProductQuantityByProductAndStorage($product->getId(), $storage->getId());
     }
 
     /**
-     * Sprawdza czy magazyn jest przytosowany do obsługi rezerwacji
-     *
-     * @param $storage
+     * @param StorageInterface|null $storage
      * @return bool
      * @throws StorageException
      */
-    protected function checkStorageCompatibility(?Storage $storage): bool
+    protected function checkStorageCompatibility(?StorageInterface $storage = null): bool
     {
-        if (!($storage instanceof Storage)) {
-            throw new StorageException('Missing storage object');
+
+        if (!$storage instanceof StorageInterface) {
+            throw new StorageException('Storage object is required');
         }
 
-        if ($storage->getType() !== Storage::TYPE_LOCAL) {
+        if ($storage->getType() !== StorageInterface::TYPE_LOCAL) {
             throw new StorageException(sprintf('Storage %s, (%s) with type %s does no support booking', $storage->getName(), $storage->getId(), $storage->getType()));
         }
 
@@ -400,24 +386,19 @@ class StorageBookingService
     }
 
     /**
-     * Sprawdzamy możliwość dokonania rezerwacji
-     * Domyślnie pozwalamy na wykonani rezerwacji nawety gdy zamówienie przekracza wartość lokalnego magazynu
-     *
-     * @param ProductQuantity $productQuantity
+     * @param ProductQuantityInterface $productQuantity
      * @param int $bookQuantity
      * @param bool $availableBackorder
      * @return bool
      */
-    protected function isBookingAvailable(ProductQuantity $productQuantity, int $bookQuantity, bool $availableBackorder = true): bool
+    #[Pure] protected function isBookingAvailable(ProductQuantityInterface $productQuantity, int $bookQuantity, bool $availableBackorder = true): bool
     {
-        if ($productQuantity->getAvailableAtHand() < 0
-            || $bookQuantity > $productQuantity->getAvailableAtHand() && !$availableBackorder
-
+        if ($productQuantity->getQuantityAvailableAtHand() < 0
+            || $bookQuantity > $productQuantity->getQuantityAvailableAtHand() && !$availableBackorder
         ) {
             return false;
         }
 
         return true;
     }
-
 }
