@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace LSB\ProductBundle\Service;
 
 use DateTime;
-use LSB\ProductBundle\Entity\Product;
 use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\ProductBundle\Entity\StorageInterface;
 use LSB\ProductBundle\Manager\ProductQuantityManager;
@@ -20,6 +19,7 @@ class StorageService
     const LOCAL_PACKAGE_MAX_SHIPPING_DAYS = 2;
     const PACKAGE_MAX_PERIOD = 1;
 
+    //TODO refactor
     const PACKAGE_TYPE_FROM_LOCAL_STOCK = 10;
     const PACKAGE_TYPE_FROM_REMOTE_STOCK = 20;
     const PACKAGE_TYPE_NEXT_SHIPPING = 30;
