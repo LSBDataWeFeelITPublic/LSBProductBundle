@@ -2,6 +2,7 @@
 
 namespace LSB\ProductBundle\Repository;
 
+use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\UtilityBundle\Repository\RepositoryInterface;
 
 /**
@@ -10,4 +11,7 @@ use LSB\UtilityBundle\Repository\RepositoryInterface;
  */
 interface ProductRepositoryInterface extends RepositoryInterface
 {
+    public function getByNumber(): ?ProductInterface;
+
+    public function getProductSetByProductAndUuid(string $productSetUuid, string $productUuid): ?ProductInterface;
 }

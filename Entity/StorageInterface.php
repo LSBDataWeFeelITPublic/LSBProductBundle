@@ -13,4 +13,6 @@ interface StorageInterface extends TranslatableInterface, UuidInterface
     const TYPE_LOCAL = 20;
 
     const TYPE_EXTERNAL = 30;
+
+    const DEFAULT_DELIVERY_TERM = 9;
 }

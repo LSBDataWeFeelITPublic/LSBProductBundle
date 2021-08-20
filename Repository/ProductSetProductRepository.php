@@ -25,4 +25,42 @@ class ProductSetProductRepository extends BaseRepository implements ProductSetPr
     {
         parent::__construct($registry, $stringClass ?? ProductSetProduct::class);
     }
+
+    /**
+     * @param array $productSetIds
+     * @param bool $returnUuid
+     * @return array
+     */
+    public function getProductSetProductIds(array $productSetIds, bool $returnUuid = false): array
+    {
+        $formattedResult = [];
+
+        $qb = $this->createQueryBuilder('psp')
+            ->leftJoin('psp.product', 'p')
+            ->where('psp.productSet IN (:productSetIds)')
+            ->setParameter('productSetIds', $productSetIds);
+
+        if ($returnUuid) {
+            $qb->select('p.uuid');
+        } else {
+            $qb->select('p.id');
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getArrayResult();
+        /**
+         * @var array $row
+         */
+        foreach ($result as $row) {
+            if ($returnUuid) {
+                $formattedResult[] = (string)$row['uuid'];
+            } else {
+                $formattedResult[] = $row['id'];
+            }
+
+        }
+
+        return $formattedResult;
+    }
 }

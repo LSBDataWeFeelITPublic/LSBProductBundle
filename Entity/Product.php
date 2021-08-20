@@ -27,6 +27,13 @@ class Product implements ProductInterface
     use CreatedUpdatedTrait;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=false, options={"default": 10})
+     */
+    protected int $type = self::TYPE_DEFAULT;
+
+    /**
      * Stuff notes
      *
      * @var string|null
@@ -162,6 +169,12 @@ class Product implements ProductInterface
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
     protected bool $useSupplier = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=false, options={"default": true})
+     */
+    protected bool $isEnabled = true;
 
     /**
      * Constructor
@@ -581,6 +594,42 @@ class Product implements ProductInterface
     public function setUseSupplier(bool $useSupplier): self
     {
         $this->useSupplier = $useSupplier;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     * @return $this
+     */
+    public function setType(int $type): self
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param bool $isEnabled
+     * @return $this
+     */
+    public function setIsEnabled(bool $isEnabled): self
+    {
+        $this->isEnabled = $isEnabled;
         return $this;
     }
 }

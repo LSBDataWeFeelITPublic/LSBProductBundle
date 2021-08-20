@@ -14,6 +14,10 @@ use LSB\UtilityBundle\Interfaces\UuidInterface;
  */
 interface ProductInterface extends TranslatableInterface, UuidInterface
 {
+    const TYPE_DEFAULT = 10;
+    const TYPE_SHIPPING = 20;
+    const TYPE_PAYMENT = 30;
+
     /**
      * @return string|null
      */
