@@ -19,9 +19,6 @@ DECLARE
     external_quantity_record                  record;
 BEGIN
     IF (SELECT COUNT(id) FROM product_app_product WHERE id = param_product_id) = 1 THEN
-        /**
-          Powinien występować maksymalnie 1 rekord SHOP PRODUCT DETAILS
-         */
         SELECT p.*
         INTO product_record
         FROM product_app_product p
