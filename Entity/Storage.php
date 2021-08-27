@@ -45,7 +45,7 @@ class Storage implements StorageInterface
      * @var integer
      * @ORM\Column(type="integer", nullable=false)
      */
-    protected int $type = self::TYPE_SELF;
+    protected int $type = self::TYPE_LOCAL;
 
     /**
      * Email address

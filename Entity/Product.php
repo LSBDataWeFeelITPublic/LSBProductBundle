@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use LSB\UtilityBundle\Helper\ValueHelper;
 use LSB\UtilityBundle\Translatable\TranslatableTrait;
 use LSB\UtilityBundle\Traits\CreatedUpdatedTrait;
 use LSB\UtilityBundle\Traits\UuidTrait;
+use LSB\UtilityBundle\Value\Value;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -175,6 +178,48 @@ class Product implements ProductInterface
      * @ORM\Column(type="boolean", nullable=false, options={"default": true})
      */
     protected bool $isEnabled = true;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $quantity = null;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $quantityAvailableAtHand = null;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $localQuantity = null;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $localQuantityAvailableAtHand = null;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $externalQuantity = null;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected ?int $externalQuantityAvailableAtHand = null;
+
+    /**
+     * @var DateTime|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected ?DateTime $availableFromDate = null;
 
     /**
      * Constructor
@@ -630,6 +675,178 @@ class Product implements ProductInterface
     public function setIsEnabled(bool $isEnabled): self
     {
         $this->isEnabled = $isEnabled;
+        return $this;
+    }
+
+    /**
+     * @param bool $useValue
+     * @return Value|int|null
+     */
+    public function getLocalQuantity(bool $useValue = false): Value|int|null
+    {
+        return $useValue ? ValueHelper::intToValue($this->localQuantity, $this->unit) : $this->localQuantity;
+    }
+
+    /**
+     * @param Value|int|null $localQuantity
+     * @return Product
+     */
+    public function setLocalQuantity(Value|int|null $localQuantity): static
+    {
+        if ($localQuantity instanceof Value)
+        {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($localQuantity);
+            $this->localQuantity = $amount;
+            return $this;
+        }
+
+        $this->localQuantity = $localQuantity;
+        return $this;
+    }
+
+    /**
+     * @param bool $useValue
+     * @return Value|int|null
+     */
+    public function getLocalQuantityAvailableAtHand(bool $useValue = false): Value|int|null
+    {
+        return $useValue ? ValueHelper::intToValue($this->localQuantityAvailableAtHand, $this->unit) : $this->localQuantityAvailableAtHand;
+    }
+
+    /**
+     * @param Value|int|null $localQuantityAvailableAtHand
+     * @return Product
+     */
+    public function setLocalQuantityAvailableAtHand(Value|int|null $localQuantityAvailableAtHand): static
+    {
+        if ($localQuantityAvailableAtHand instanceof Value)
+        {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($localQuantityAvailableAtHand);
+            $this->localQuantityAvailableAtHand = $amount;
+            return $this;
+        }
+
+        $this->localQuantityAvailableAtHand = $localQuantityAvailableAtHand;
+        return $this;
+    }
+
+    /**
+     * @param bool $useValue
+     * @return Value|int|null
+     */
+    public function getExternalQuantity(bool $useValue = false): Value|int|null
+    {
+        return $useValue ? ValueHelper::intToValue($this->externalQuantity, $this->unit) : $this->localQuantityAvailableAtHand;
+    }
+
+    /**
+     * @param Value|int|null $externalQuantity
+     * @return Product
+     */
+    public function setExternalQuantity(Value|int|null $externalQuantity): static
+    {
+        if ($externalQuantity instanceof Value)
+        {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($externalQuantity);
+            $this->externalQuantity = $amount;
+            return $this;
+        }
+
+        $this->externalQuantity = $externalQuantity;
+        return $this;
+    }
+
+    /**
+     * @param bool $useValue
+     * @return Value|int
+     */
+    public function getExternalQuantityAvailableAtHand(bool $useValue = true): Value|int|null
+    {
+        return $useValue ? ValueHelper::intToValue($this->externalQuantityAvailableAtHand, $this->unit) : $this->externalQuantityAvailableAtHand;
+    }
+
+    /**
+     * @param Value|int|null $externalQuantityAvailableAtHand
+     * @return Product
+     */
+    public function setExternalQuantityAvailableAtHand(Value|int|null $externalQuantityAvailableAtHand): static
+    {
+        if ($externalQuantityAvailableAtHand instanceof Value)
+        {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($externalQuantityAvailableAtHand);
+            $this->externalQuantity = $amount;
+            return $this;
+        }
+
+        $this->externalQuantityAvailableAtHand = $externalQuantityAvailableAtHand;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getAvailableFromDate(): ?DateTime
+    {
+        return $this->availableFromDate;
+    }
+
+    /**
+     * @param DateTime|null $availableFromDate
+     * @return Product
+     */
+    public function setAvailableFromDate(?DateTime $availableFromDate): Product
+    {
+        $this->availableFromDate = $availableFromDate;
+        return $this;
+    }
+
+    /**
+     * @param bool $useValue
+     * @return Value|int|null
+     */
+    public function getQuantity(bool $useValue = false): Value|int|null
+    {
+        return $useValue ? ValueHelper::intToValue($this->quantity, $this->unit) : $this->quantity;
+    }
+
+    /**
+     * @param Value|int|null $quantity
+     * @return Product
+     */
+    public function setQuantity(Value|int|null $quantity): Product
+    {
+        if ($quantity instanceof Value) {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($quantity);
+            $this->quantity = $amount;
+            return $this;
+        }
+
+        $this->quantity = $quantity;
+        return $this;
+    }
+
+    /**
+     * @param bool $useValue
+     * @return Value|int|null
+     */
+    public function getQuantityAvailableAtHand(bool $useValue = false): Value|int|null
+    {
+        return $useValue ? ValueHelper::intToValue($this->quantityAvailableAtHand, $this->unit) : $this->quantityAvailableAtHand;
+    }
+
+    /**
+     * @param Value|int|null $quantityAvailableAtHand
+     * @return Product
+     */
+    public function setQuantityAvailableAtHand(Value|int|null $quantityAvailableAtHand): Product
+    {
+        if ($quantityAvailableAtHand instanceof Value) {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($quantityAvailableAtHand);
+            $this->quantityAvailableAtHand = $amount;
+            return $this;
+        }
+
+        $this->quantityAvailableAtHand = $quantityAvailableAtHand;
         return $this;
     }
 }

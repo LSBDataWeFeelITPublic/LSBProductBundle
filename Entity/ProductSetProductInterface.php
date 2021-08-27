@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Entity;
 
+use LSB\UtilityBundle\Value\Value;
+
 /**
  * Interface ProductSetProductInterface
  * @package LSB\ProductBundle\Interfaces
@@ -43,15 +45,15 @@ interface ProductSetProductInterface
     public function setPosition(int $position): self;
 
     /**
-     * @return float|null
+     * @return Value|int
      */
-    public function getQuantity(): ?float;
+    public function getQuantity(): Value|int;
 
     /**
-     * @param float|null $quantity
+     * @param Value|int $quantity
      * @return $this
      */
-    public function setQuantity(?float $quantity): self;
+    public function setQuantity(Value|int $quantity): self;
 
     /**
      * @return bool

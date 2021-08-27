@@ -5,9 +5,11 @@ namespace LSB\ProductBundle\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use LSB\UtilityBundle\Helper\ValueHelper;
 use LSB\UtilityBundle\Traits\CreatedUpdatedTrait;
 use LSB\UtilityBundle\Traits\IdTrait;
 use Doctrine\ORM\Mapping\MappedSuperclass;
+use LSB\UtilityBundle\Value\Value;
 
 /**
  * Class ProductSetProduct
@@ -30,7 +32,7 @@ class ProductSetProduct implements ProductSetProductInterface
     /**
      * Product with product set flag (product set)
      *
-     * @var ProductInterface
+     * @var ProductInterface|null
      * @ORM\ManyToOne(targetEntity="LSB\ProductBundle\Entity\ProductInterface", inversedBy="productSetProducts")
      * @Gedmo\SortableGroup
      */
@@ -46,12 +48,16 @@ class ProductSetProduct implements ProductSetProductInterface
     protected ?int $position = 0;
 
     /**
-     * Component product
-     *
-     * @var float|null
-     * @ORM\Column(type="decimal", precision=18, scale=1, nullable=false, options={"default": 1})
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=false, options={"default": 1})
      */
-    protected ?float $quantity = 1;
+    protected ?int $quantity = 1;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    protected ?string $unit = null;
 
     /**
      * Is default product
@@ -134,19 +140,25 @@ class ProductSetProduct implements ProductSetProductInterface
     }
 
     /**
-     * @return float|null
+     * @param bool $useValue
+     * @return Value|int
      */
-    public function getQuantity(): ?float
+    public function getQuantity(bool $useValue = false): Value|int
     {
-        return $this->quantity;
+        return $useValue ? ValueHelper::intToValue($this->quantity, $this->unit) : $this->quantity;
     }
 
     /**
-     * @param float|null $quantity
+     * @param Value|int $quantity
      * @return $this
      */
-    public function setQuantity(?float $quantity): self
+    public function setQuantity(Value|int $quantity): self
     {
+        if ($quantity instanceof Value) {
+            $this->quantity = (int) $quantity->getAmount();
+            $this->unit = $quantity->getUnit();
+        }
+
         $this->quantity = $quantity;
         return $this;
     }
@@ -166,6 +178,24 @@ class ProductSetProduct implements ProductSetProductInterface
     public function setIsMain(bool $isMain): self
     {
         $this->isMain = $isMain;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param string|null $unit
+     * @return ProductSetProduct
+     */
+    public function setUnit(?string $unit): ProductSetProduct
+    {
+        $this->unit = $unit;
         return $this;
     }
 }

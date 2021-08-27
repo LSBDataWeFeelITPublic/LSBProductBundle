@@ -41,7 +41,7 @@ class ProductQuantity implements ProductQuantityInterface
      *
      * @ORM\Column(type="integer")
      */
-    protected int $quantityAvailableAtHand;
+    protected int $quantityAvailableAtHand = 0;
 
     /**
      * @param int $bookQuantity
@@ -102,7 +102,7 @@ class ProductQuantity implements ProductQuantityInterface
      * @param Storage $storage
      * @return $this
      */
-    public function setStorage(Storage|StorageInterface $storage): static
+    public function setStorage(StorageInterface $storage): static
     {
         $this->storage = $storage;
         return $this;
