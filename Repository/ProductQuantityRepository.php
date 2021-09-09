@@ -93,7 +93,7 @@ class ProductQuantityRepository extends BaseRepository implements ProductQuantit
 
         $qb = $this->createQueryBuilder('pq');
         $qb
-            ->select('SUM(pq.quantity) as remoteQuantity')
+            ->select('COALESCE(SUM(pq.quantity), 0) as remoteQuantity')
             ->leftJoin('pq.storage', 's')
             ->where('s.type = :storageType')
             ->andWhere('IDENTITY(pq.product) = :productId')

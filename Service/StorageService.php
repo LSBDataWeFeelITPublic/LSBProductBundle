@@ -8,7 +8,9 @@ use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\ProductBundle\Entity\StorageInterface;
 use LSB\ProductBundle\Manager\ProductQuantityManager;
 use LSB\ProductBundle\Manager\StorageManager;
+use LSB\UtilityBundle\Helper\ValueHelper;
 use LSB\UtilityBundle\Interfaces\Base\BasePackageInterface;
+use LSB\UtilityBundle\Value\Value;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
@@ -240,7 +242,7 @@ class StorageService
      * Używane przy scalaniu dostaw
      *
      * @param ProductInterface $product
-     * @param float $quantity
+     * @param Value $quantity
      * @param bool $useLocalAsRemote
      * @param bool $reserveQuantities
      * @param bool $mergeReservations
@@ -249,7 +251,7 @@ class StorageService
      */
     public function calculateRemoteShippingQuantityAndDays(
         ProductInterface $product,
-        float $quantity,
+        Value $quantity,
         bool $useLocalAsRemote = false,
         bool $reserveQuantities = false,
         bool $mergeReservations = false
@@ -258,6 +260,7 @@ class StorageService
         $backorderQuantity = 0;
 
         $storageWithQuantity = [];
+
         //pobieramy kolejne magazyny w kolejności od najkrótszego czasu dostawy ze stanem magazynowym product
         $deliveryStorages = $this->productQuantityManager->getRepository()->getRemoteDeliveryDaysForProduct($product->getId(), $useLocalAsRemote);
 
@@ -303,7 +306,7 @@ class StorageService
                 //scalamy stany do jednego dnia dostawy
                 $storages[$maxShippingDays] =
                     [
-                        'quantityFromStorage' => (float)$storages[$maxShippingDays]['quantityFromStorage'] + $quantityFromStorage,
+                        'quantityFromStorage' => ValueHelper::convertToValue($storages[$maxShippingDays]['quantityFromStorage'] + $quantityFromStorage),
                         'shippingDays' => ($realShippingDays > $storages[$maxShippingDays]['shippingDays']) ? $realShippingDays : $storages[$maxShippingDays]['shippingDays'],
                         'isMerged' => true
                     ];
@@ -315,7 +318,7 @@ class StorageService
 
                 $storages[$maxShippingDays] =
                     [
-                        'quantityFromStorage' => (float)$storages[$closest]['quantityFromStorage'] + $quantityFromStorage,
+                        'quantityFromStorage' =>  ValueHelper::convertToValue($storages[$closest]['quantityFromStorage'] + $quantityFromStorage),
                         'shippingDays' => ($realShippingDays > $storages[$closest]['shippingDays']) ? $realShippingDays : $storages[$maxShippingDays]['shippingDays'],
                         'isMerged' => true
                     ];
@@ -326,7 +329,7 @@ class StorageService
                 //tworzymy nową pozycję dostawy
                 $storages[$maxShippingDays] =
                     [
-                        'quantityFromStorage' => (float)$quantityFromStorage,
+                        'quantityFromStorage' =>  ValueHelper::convertToValue($quantityFromStorage),
                         'shippingDays' => $realShippingDays,
                         'isMerged' => false,
                     ];
@@ -334,12 +337,13 @@ class StorageService
                 $storagesCountBeforeMerge++;
             }
 
-            if ($quantityLeft == 0) {
+            if ($quantityLeft->equals(ValueHelper::createValueZero())) {
                 break;
             }
         }
 
-        $quantity -= $quantityLeft;
+        //$quantity -= $quantityLeft;
+        $quantity = $quantity->subtract($quantityLeft);
 
         if (isset($this->orderBundleConfiguration['backOrder']['enabled'])
             && $this->orderBundleConfiguration['backOrder']['enabled']
@@ -351,9 +355,9 @@ class StorageService
         return [
             $quantity, //maksymalny, dostępny stan mag.
             $storages, //dostępności z podziałem na dni (obcięte do poziomu wymaganego przez zamówienie)
-            $backorderQuantity, //wyliczona dostępność na zamówienie
+            ValueHelper::convertToValue($backorderQuantity), //wyliczona dostępność na zamówienie
             $storagesCountBeforeMerge, //ilość magazynów przed scaleniem
-            $deliveryStorages //tablica dostępności zawierająca
+            $deliveryStorages //tablica dostępności zawierająca, raw data wihtout Value objects
         ];
     }
 
