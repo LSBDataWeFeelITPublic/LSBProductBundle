@@ -60,8 +60,10 @@ class Product implements ProductInterface
     protected bool $isPackage = false;
 
     /**
+     * TODO use Value
+     *
      * @var float
-     * @ORM\Column(type="decimal", precision=18, scale=1, nullable=false)
+     * @ORM\Column(type="decimal", precision=18, scale=1, nullable=true)
      */
     protected $itemsInPackage = 1.0;
 
