@@ -5,10 +5,12 @@ namespace LSB\ProductBundle\Form;
 
 use LSB\UtilityBundle\Form\BaseEntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Class ProductType
@@ -28,10 +30,21 @@ class ProductType extends BaseEntityType
             ->add(
                 'eanCode',
                 TextType::class,
+                [
+                    'documentation' => [
+                        'maxLength' => 50,
+                        'description' => 'EAN code'
+                    ]
+                ]
             )
             ->add(
                 'number',
-                TextType::class
+                TextType::class,
+                [
+                    'documentation' => [
+                        'maxLength' => 50
+                    ]
+                ]
             )
             ->add('isPackage',
                 CheckboxType::class
@@ -52,5 +65,15 @@ class ProductType extends BaseEntityType
                 'translations',
                 TranslationsType::class
             );
+
+//        ->add(
+//        'translations',
+//        CollectionType::class,
+//        [
+//            'entry_type' => ProductTranslationType::class,
+//            'allow_add' => true,
+//            'allow_delete' => true
+//        ]
+//    );
     }
 }

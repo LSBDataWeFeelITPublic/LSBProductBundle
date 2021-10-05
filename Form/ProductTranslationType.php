@@ -33,7 +33,12 @@ class ProductTranslationType extends BaseEntityType
             ->add(
                 'unit',
                 TextType::class
-            );
+            )
+            ->add(
+                'locale',
+                TextType::class
+            )
+        ;
     }
 
 }
