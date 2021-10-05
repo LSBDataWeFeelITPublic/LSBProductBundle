@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace LSB\ProductBundle\Form;
 
 use LSB\UtilityBundle\Form\BaseEntityType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -20,25 +22,61 @@ class ProductTranslationType extends BaseEntityType
         $builder
             ->add(
                 'name',
-                TextType::class
+                TextType::class,
+                [
+                    'required' => false,
+                    'documentation' => [
+                        'maxLength' => 255
+                    ]
+                ]
             )
             ->add(
                 'additionalName',
-                TextType::class
+                TextType::class,
+                [
+                    'required' => false,
+                    'documentation' => [
+                        'maxLength' => 255
+                    ]
+                ]
             )
             ->add(
                 'slug',
-                TextType::class
+                TextType::class,
+                [
+                    'required' => false,
+                    'documentation' => [
+                        'maxLength' => 255
+                    ]
+                ]
+            )
+            ->add(
+                'description',
+                TextareaType::class,
+                [
+                    'required' => false
+                ]
             )
             ->add(
                 'unit',
-                TextType::class
+                TextType::class,
+                [
+                    'required' => false,
+                    'documentation' => [
+                        'maxLength' => 15
+                    ]
+                ]
             )
             ->add(
                 'locale',
-                TextType::class
-            )
-        ;
+                TextType::class,
+                [
+                    'required' => false,
+                    'documentation' => [
+                        'maxLength' => 5
+                    ]
+                ]
+            );
     }
 
 }

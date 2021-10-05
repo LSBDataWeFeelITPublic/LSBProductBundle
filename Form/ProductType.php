@@ -61,19 +61,20 @@ class ProductType extends BaseEntityType
             ->add('useSupplier',
                 CheckboxType::class
             )
+//            ->add(
+//                'translations',
+//                TranslationsType::class
+//            );
+
             ->add(
                 'translations',
-                TranslationsType::class
+                CollectionType::class,
+                [
+                    'entry_type' => ProductTranslationType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false
+                ]
             );
-
-//        ->add(
-//        'translations',
-//        CollectionType::class,
-//        [
-//            'entry_type' => ProductTranslationType::class,
-//            'allow_add' => true,
-//            'allow_delete' => true
-//        ]
-//    );
     }
 }
