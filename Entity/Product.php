@@ -45,12 +45,12 @@ class Product implements ProductInterface
     protected ?string $notes = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=50, nullable=false, unique=true)
      * @Assert\Length(max=50, groups={"Default"})
      */
-    protected string $number;
+    protected ?string $number = null;
 
     /**
      * @var bool
