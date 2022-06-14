@@ -114,7 +114,7 @@ class ProductQuantity implements ProductQuantityInterface
      * @param bool $useValue
      * @return int
      */
-    public function getQuantity(bool $useValue = false): Value|int
+    public function getQuantity(bool $useValue = true): Value|int
     {
         return $useValue ? ValueHelper::intToValue($this->quantity) : $this->quantity;
     }
@@ -140,7 +140,7 @@ class ProductQuantity implements ProductQuantityInterface
      * @param bool $useValue
      * @return \LSB\UtilityBundle\Value\Value|int
      */
-    public function getQuantityAvailableAtHand(bool $useValue = false): Value|int
+    public function getQuantityAvailableAtHand(bool $useValue = true): Value|int
     {
         return $useValue ? ValueHelper::intToValue($this->quantityAvailableAtHand) : $this->quantityAvailableAtHand;
     }
