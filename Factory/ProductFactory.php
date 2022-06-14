@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Factory;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use LSB\ProductBundle\Entity\ProductInterface;
 use LSB\UtilityBundle\Factory\BaseFactory;
 
@@ -17,6 +18,16 @@ class ProductFactory extends BaseFactory implements ProductFactoryInterface
      */
     public function createNew(): ProductInterface
     {
-        return parent::createNew();
+        /**
+         * @var ProductInterface $object
+         */
+        $object = parent::createNew();
+
+        $object
+            ->setProductSetProducts(new ArrayCollection)
+            ->setProductQuantities(new ArrayCollection)
+        ;
+
+        return $object;
     }
 }

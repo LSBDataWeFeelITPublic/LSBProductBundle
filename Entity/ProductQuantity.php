@@ -5,7 +5,9 @@ namespace LSB\ProductBundle\Entity;
 
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Doctrine\ORM\Mapping as ORM;
-use LSB\UtilityBundle\Traits\IdTrait;
+use LSB\UtilityBundle\Helper\ValueHelper;
+use LSB\UtilityBundle\Traits\UuidTrait;
+use LSB\UtilityBundle\Value\Value;
 
 /**
  * Class ProductSetProduct
@@ -14,7 +16,7 @@ use LSB\UtilityBundle\Traits\IdTrait;
  */
 class ProductQuantity implements ProductQuantityInterface
 {
-    use IdTrait;
+    use UuidTrait;
 
     /**
      * @var ProductInterface
@@ -109,37 +111,53 @@ class ProductQuantity implements ProductQuantityInterface
     }
 
     /**
+     * @param bool $useValue
      * @return int
      */
-    public function getQuantity(): int
+    public function getQuantity(bool $useValue = false): Value|int
     {
-        return $this->quantity;
+        return $useValue ? ValueHelper::intToValue($this->quantity) : $this->quantity;
     }
 
     /**
-     * @param int $quantity
+     * @param \LSB\UtilityBundle\Value\Value|int $quantity
      * @return $this
      */
-    public function setQuantity(int $quantity): static
+    public function setQuantity(Value|int $quantity): static
     {
+        if ($quantity instanceof Value)
+        {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($quantity);
+            $this->quantity = $amount;
+            return $this;
+        }
+
         $this->quantity = $quantity;
         return $this;
     }
 
     /**
-     * @return int
+     * @param bool $useValue
+     * @return \LSB\UtilityBundle\Value\Value|int
      */
-    public function getQuantityAvailableAtHand(): int
+    public function getQuantityAvailableAtHand(bool $useValue = false): Value|int
     {
-        return $this->quantityAvailableAtHand;
+        return $useValue ? ValueHelper::intToValue($this->quantityAvailableAtHand) : $this->quantityAvailableAtHand;
     }
 
     /**
-     * @param int $quantityAvailableAtHand
+     * @param \LSB\UtilityBundle\Value\Value|int $quantityAvailableAtHand
      * @return $this
      */
-    public function setQuantityAvailableAtHand(int $quantityAvailableAtHand): static
+    public function setQuantityAvailableAtHand(Value|int $quantityAvailableAtHand): static
     {
+        if ($quantityAvailableAtHand instanceof Value)
+        {
+            [$amount, $unit] = ValueHelper::valueToIntUnit($quantityAvailableAtHand);
+            $this->quantityAvailableAtHand = $amount;
+            return $this;
+        }
+
         $this->quantityAvailableAtHand = $quantityAvailableAtHand;
         return $this;
     }

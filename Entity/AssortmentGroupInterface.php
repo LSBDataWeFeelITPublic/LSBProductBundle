@@ -5,12 +5,14 @@ namespace LSB\ProductBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use LSB\UtilityBundle\Interfaces\UuidInterface;
 
 /**
  * Interface AssortmentGroupInterface
  * @package LSB\ProductBundle\Interfaces
  */
-interface AssortmentGroupInterface
+interface AssortmentGroupInterface extends TranslatableInterface
 {
     /**
      * @return string

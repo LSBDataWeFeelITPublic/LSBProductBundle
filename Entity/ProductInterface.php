@@ -52,15 +52,15 @@ interface ProductInterface extends TranslatableInterface, UuidInterface
     public function setIsPackage(bool $isPackage): self;
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getItemsInPackage(): float;
+    public function getItemsInPackage(): ?float;
 
     /**
-     * @param float $itemsInPackage
+     * @param float|null $itemsInPackage
      * @return $this
      */
-    public function setItemsInPackage(float $itemsInPackage): self;
+    public function setItemsInPackage(?float $itemsInPackage): self;
 
     /**
      * @return float|null

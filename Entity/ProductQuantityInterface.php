@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace LSB\ProductBundle\Entity;
 
-use LSB\UtilityBundle\Interfaces\IdInterface;
+use LSB\UtilityBundle\Interfaces\UuidInterface;
 
-interface ProductQuantityInterface extends IdInterface
+interface ProductQuantityInterface extends UuidInterface
 {
 
 }

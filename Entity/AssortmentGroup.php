@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"code"})
  * @MappedSuperclass
  */
-class AssortmentGroup implements AssortmentGroupInterface, TranslatableInterface
+class AssortmentGroup implements AssortmentGroupInterface
 {
     use UuidTrait;
     use TranslatableTrait;

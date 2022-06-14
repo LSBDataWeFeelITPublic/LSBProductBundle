@@ -62,10 +62,10 @@ class Product implements ProductInterface
     /**
      * TODO use Value
      *
-     * @var float
+     * @var float|null
      * @ORM\Column(type="decimal", precision=18, scale=1, nullable=true)
      */
-    protected $itemsInPackage = 1.0;
+    protected ?float $itemsInPackage = 1.0;
 
     /**
      * @var float|null
@@ -157,6 +157,16 @@ class Product implements ProductInterface
      * @ORM\OrderBy({"id" = "ASC"})
      */
     protected Collection $productSets;
+
+    /**
+     * List of product quantity records
+     *
+     * @var ArrayCollection|Collection|ProductQuantityInterface[]
+     *
+     * @ORM\OneToMany(targetEntity="LSB\ProductBundle\Entity\ProductQuantityInterface", mappedBy="product", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OrderBy({"storage" = "ASC"})
+     */
+    protected Collection $productQuantities;
 
     /**
      * Supplier
@@ -323,18 +333,18 @@ class Product implements ProductInterface
     }
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getItemsInPackage(): float
+    public function getItemsInPackage(): ?float
     {
-        return (float) $this->itemsInPackage;
+        return $this->itemsInPackage ? (float) $this->itemsInPackage : null;
     }
 
     /**
-     * @param float $itemsInPackage
+     * @param float|null $itemsInPackage
      * @return $this
      */
-    public function setItemsInPackage(float $itemsInPackage): self
+    public function setItemsInPackage(?float $itemsInPackage): self
     {
         $this->itemsInPackage = $itemsInPackage;
         return $this;
@@ -605,6 +615,51 @@ class Product implements ProductInterface
     public function setProductSets($productSets)
     {
         $this->productSets = $productSets;
+        return $this;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection|\LSB\ProductBundle\Entity\ProductQuantityInterface[]
+     */
+    public function getProductQuantities(): ArrayCollection|Collection|array
+    {
+        return $this->productQuantities;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection|\LSB\ProductBundle\Entity\ProductQuantityInterface[] $productQuantities
+     * @return Product
+     */
+    public function setProductQuantities(ArrayCollection|Collection|array $productQuantities): Product
+    {
+        $this->productQuantities = $productQuantities;
+        return $this;
+    }
+
+    /**
+     * @param ProductSetProductInterface $productSet
+     *
+     * @return $this
+     */
+    public function addProductQuantity(ProductQuantityInterface $productQuantity)
+    {
+        if (false === $this->productQuantities->contains($productQuantity)) {
+            $productQuantity->setProduct($this);
+            $this->productQuantities->add($productQuantity);
+        }
+        return $this;
+    }
+
+    /**
+     * @param ProductQuantityInterface $productQuantity
+     *
+     * @return $this
+     */
+    public function removeProductQuantity(ProductQuantityInterface $productQuantity)
+    {
+        if (true === $this->productQuantities->contains($productQuantity)) {
+            $this->productQuantities->removeElement($productQuantity);
+        }
         return $this;
     }
 
